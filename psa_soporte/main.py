@@ -1,9 +1,7 @@
 import uvicorn
 from fastapi import Depends, FastAPI
-from database import Base, engine, Session, get_session
+from database import Session, get_session
 from psa_soporte.models import Employee, Ticket
-
-Base.metadata.create_all(engine)
 
 app = FastAPI()
 
