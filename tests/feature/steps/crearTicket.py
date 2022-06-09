@@ -23,7 +23,6 @@ def step_impl(context):
 
 @then(u'El ticket se crea correctamente')
 def step_impl(context):
-    print(context.error)
     assert context.error == None
 
 

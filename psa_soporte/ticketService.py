@@ -13,7 +13,7 @@ class TicketService:
                         priority=priority, severity=severity, deadline=deadline)
 
         db.add(ticket)
-
         db.commit()
+        db.refresh(ticket)
 
-        return db.refresh(ticket)
+        return ticket 
