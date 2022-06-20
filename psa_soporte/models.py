@@ -4,11 +4,17 @@ from sqlalchemy import *
 from .constants import *
 from sqlalchemy.sql import func
 
+"""
+|  ticketID=2    |    employeeID = 3  |
+|  ticketID=2    |    employeeID = 4  |
+"""
+
 
 class Employee(Base):
     __tablename__ = "employees"
 
-    id = Column('id', Integer, primary_key=True)
+    employeeID = Column('employeeID', Integer, primary_key=True)
+    ticketID = Column('ticketID', ForeignKey("tickets.id"), primary_key=True)
 
 
 class Ticket(Base):
