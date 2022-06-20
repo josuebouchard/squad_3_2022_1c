@@ -1,7 +1,6 @@
 import uvicorn
 from fastapi import Depends, FastAPI
-from database import Session, get_session
-from psa_soporte.models import Employee, Ticket
+from .database import Session, get_session
 
 app = FastAPI()
 

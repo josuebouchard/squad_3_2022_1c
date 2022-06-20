@@ -1,1 +1,1 @@
-web: uvicorn -m psa_soporte.main:app --port=$PORT
+web: uvicorn psa_soporte.main:app --port=$PORT
