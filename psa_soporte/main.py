@@ -1,6 +1,9 @@
 import uvicorn
 from fastapi import Depends, FastAPI
-from .database import Session, get_session
+from .database import Session, engine, get_session
+from . import models
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
