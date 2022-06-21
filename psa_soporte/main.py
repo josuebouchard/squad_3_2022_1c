@@ -1,9 +1,17 @@
+from os import environ
 import uvicorn
 from fastapi import Depends, FastAPI
 from .database import Session, engine, get_session
 from . import models
 
+#=========== Database initialization ==========
+
+if environ.get("ENV", '').lower() == "dev":
+    models.Base.metadata.drop_all(bind=engine)
+
 models.Base.metadata.create_all(bind=engine)
+
+#==============================================
 
 app = FastAPI()
 
