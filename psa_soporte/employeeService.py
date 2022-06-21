@@ -1,5 +1,5 @@
-from psa_soporte.database import SessionLocal, get_session, Session
-from .models import *
+from database import SessionLocal, get_session, Session
+from models import *
 import requests
 
 
@@ -10,22 +10,46 @@ class EmployeeService:
     def __init__(self):
         pass
 
-    def addEmployee(self, employeeID, ticketID):
+    def addEmployees(self, employeesID, ticketID):
+        # employeesID es una lista con los ids de los empleados
+        if len(employeesID) == 0:
+            raise Exception('Cannot create a ticket without any assigned person')
+
         employees = requests.get(url).json()
         ids = []
 
         for employee in employees:
             ids.append(int(employee['legajo']))
 
-        if int(employeeID) not in ids:
-            raise Exception('Cannot create a ticket with an assigned person who is not in the system')
-
         db: Session = SessionLocal()
 
-        employee = Employee(employeeID=employeeID, ticketID=ticketID)
+        for employeeID in employeesID:
+            if int(employeeID) not in ids:
+                raise Exception('Cannot create a ticket with an assigned person who is not in the system')
 
-        db.add(employee)
+            employee = Employee(employeeID=employeeID, ticketID=ticketID)
+
+            db.add(employee)
+
         db.commit()
         db.refresh(employee)
 
-        return employee
+        return True
+
+
+    def getAllEmployeesAssignedTo(self, ticketID):
+        db: Session = SessionLocal()
+
+        return db.query(Employee).filter_by(ticketID=ticketID).all()
+
+    
+    def removeEmployeeFromTicket(self, employeeID, ticketID):
+        db: Session = SessionLocal()
+
+        db.query(Employee).filter_by(employeeID=employeeID, ticketID=ticketID).delete()
+
+        db.commit()
+
+
+    def addEmployee(self, employeeID, ticketID):
+        return self.addEmployees([employeeID], ticketID)
