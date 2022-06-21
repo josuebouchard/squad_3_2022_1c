@@ -1,5 +1,5 @@
 from database import SessionLocal, get_session, Session
-from models import *
+from .models import *
 import requests
 
 
