@@ -27,10 +27,17 @@ O si prefiere correr un comando sin tener que hacer lo anterior, se puede proced
 pipenv run <COMANDO>
 ```
 
-## Configuracion de base de datos
+## Variables de entorno
 
-Para conectarse a la base de datos, el sistema debe recibir como variable de entorno (o en su defecto, en un `.env` ubicado en la raiz del proyecto):
 ```ini
+# Ambiente ("dev" o "prod") (default="prod")
+# Si es "dev", cada vez que se prenda borra la base de datos y la recrea
+ENV="prod"
+
+# Debe el sistema mostrar los comandos SQL por pantalla? ("True" o "False") (default=False)
+ECHO_DB="False"
+
+# Link de coneccion a la base de datos (Obligatoria)
 DATABASE_URL="postgresql://<USUARIO>:<CONTRASEÑA>@<HOST>:<PUERTO>/<DBNAME>"
 ```
 
