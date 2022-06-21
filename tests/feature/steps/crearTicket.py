@@ -11,12 +11,12 @@ def step_impl(context):
     pass
 
 
-@given(u'La fecha actual es {unaFechaActual}')
+@given(u'La fecha actual es "{unaFechaActual}"')
 def step_impl(context, unaFechaActual):
     context.fechaActual = unaFechaActual
 
 
-@when(u'Creo un ticket con fecha de vencimiento {unaFechaDeVencimiento} anterior a la fecha actual')
+@when(u'Creo un ticket con fecha de vencimiento "{unaFechaDeVencimiento}" anterior a la fecha actual')
 def step_impl(context, unaFechaDeVencimiento):
     context.error = None
     try:
@@ -38,7 +38,7 @@ def step_impl(context):
 
     for employeeID in model['responsables'].split(','):
         try:
-            EmployeeService().addEmployee(employeeID, context.ticket.id)
+            EmployeeService().addEmployee(int(employeeID), context.ticket.id)
 
         except Exception as error:
             context.error = error

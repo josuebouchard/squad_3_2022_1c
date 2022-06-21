@@ -19,7 +19,7 @@ Feature: Creación de Ticket
 	Scenario: Crear un ticket con fecha de vencimiento anterior a la actual
 		Given Soy empleado de mesa de ayuda
 		And La fecha actual es "2022-06-20"
-		When Creo un ticket con fecha de vencimiento "2023-01-01" anterior a la fecha actual
+		When Creo un ticket con fecha de vencimiento "2020-01-01" anterior a la fecha actual
 		Then Se emite un error
 		And El ticket no es creado
 
