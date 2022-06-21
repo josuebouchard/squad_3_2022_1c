@@ -31,4 +31,8 @@ Feature: Creación de Ticket
 		Then Se emite un error
 
 
-
+	Scenario: Crear un ticket sin alguno de los atributos
+		Given Soy empleado de mesa de ayuda
+		When Creo un ticket sin alguno de los atributos obligatorios
+		Then Se emite un error
+		And El ticket no es creado
