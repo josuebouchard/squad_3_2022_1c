@@ -1,8 +1,10 @@
-import os
+from os import environ
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base, Session
 
-engine = create_engine(os.environ["DATABASE_URL"], echo=True)
+db_echo = environ.get("ECHO_DB", '').lower() == "True"
+
+engine = create_engine(environ["DATABASE_URL"], echo=db_echo)
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
 
