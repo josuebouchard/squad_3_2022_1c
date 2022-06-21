@@ -5,13 +5,14 @@ Feature: Edición de los tickets para actualizar la información de los mismos.
         And hay un ticket
         When consulto los tickets que se encuentran en el sistema
         Then puedo editar de cada uno de esos tickets
-        |item                |nuevoValor             |
-        |titulo              |nuevoTitulo            |
-        |descripcion         |nuevaDescripcion       |
-        |prioridad           |nuevaPrioridad         |
-        |severidad           |nuevaSeveridad         |
-        |responsables        |nuevosResponsables     |
-        |fechaDeVencimiento  |2022-12-31             |
+        | item              | nuevoValor                                  |
+        | titulo     		| Entidades desaparecidas 					  |
+        | descripcion   	| Desaparecieron entidades de mi inventario   |
+        | prioridad     	| Alta 		  							      |
+        | severidad 		| s3 		  							      |
+        | producto 			| Sistema de inventarios versión 1.1.3	      |
+        | responsables 		| 1,2                						  |
+        | fechaDeVencimiento| 2023-07-07 								  |
 
     Scenario: Editar un ticket con fecha de vencimiento anterior a la actual
         Given Soy empleado de mesa de ayuda

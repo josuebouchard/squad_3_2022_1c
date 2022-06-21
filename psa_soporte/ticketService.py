@@ -84,8 +84,8 @@ class TicketService:
         db.commit()
 
     def getPriority(self, ticketID):
-            db: Session = SessionLocal()
-            return db.get(Ticket, ticketID).priority
+        db: Session = SessionLocal()
+        return db.get(Ticket, ticketID).priority
 
     def setDeadline(self, ticketID, newDeadline):
         db: Session = SessionLocal()
