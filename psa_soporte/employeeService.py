@@ -39,8 +39,12 @@ class EmployeeService:
 
     def getAllEmployeesAssignedTo(self, ticketID):
         db: Session = SessionLocal()
+        ids = []
 
-        return db.query(Employee).filter_by(ticketID=ticketID).all()
+        for employee in db.query(Employee).filter_by(ticketID=ticketID).all():
+            ids.append(int(employee.employeeID))
+
+        return ids
 
     
     def removeEmployeeFromTicket(self, employeeID, ticketID):

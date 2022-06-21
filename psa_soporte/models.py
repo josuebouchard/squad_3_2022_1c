@@ -1,4 +1,5 @@
 
+from logging import raiseExceptions
 from .database import Base
 from sqlalchemy import *
 from .constants import *
@@ -12,9 +13,9 @@ from sqlalchemy.sql import func
 
 class Employee(Base):
     __tablename__ = "employees"
-
-    employeeID = Column('employeeID', Integer, primary_key=True)
-    ticketID = Column('ticketID', ForeignKey("tickets.id"), primary_key=True)
+    id = Column('id', Integer, primary_key=True)
+    employeeID = Column('employeeID', Integer)
+    ticketID = Column('ticketID', ForeignKey("tickets.id"))
 
 
 class Ticket(Base):
@@ -29,3 +30,9 @@ class Ticket(Base):
     lastUpdateDate = Column(DateTime(timezone=True), onupdate=func.now())
     creationDate = Column(DateTime(timezone=True), server_default=func.now())
     deadline = Column(DateTime)
+
+
+
+
+
+
