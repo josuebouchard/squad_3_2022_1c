@@ -5,7 +5,9 @@ from sqlalchemy import *
 from .constants import *
 from sqlalchemy.sql import func
 
+
 """
+table employees
 |  ticketID=2    |    employeeID = 3  |
 |  ticketID=2    |    employeeID = 4  |
 """
@@ -30,9 +32,3 @@ class Ticket(Base):
     lastUpdateDate = Column(DateTime(timezone=True), onupdate=func.now())
     creationDate = Column(DateTime(timezone=True), server_default=func.now())
     deadline = Column(DateTime)
-
-
-
-
-
-

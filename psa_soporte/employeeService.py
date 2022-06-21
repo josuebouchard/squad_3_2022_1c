@@ -36,7 +36,6 @@ class EmployeeService:
 
         return True
 
-
     def getAllEmployeesAssignedTo(self, ticketID):
         db: Session = SessionLocal()
         ids = []
@@ -46,14 +45,12 @@ class EmployeeService:
 
         return ids
 
-    
     def removeEmployeeFromTicket(self, employeeID, ticketID):
         db: Session = SessionLocal()
 
         db.query(Employee).filter_by(employeeID=employeeID, ticketID=ticketID).delete()
 
         db.commit()
-
 
     def addEmployee(self, employeeID, ticketID):
         return self.addEmployees([employeeID], ticketID)

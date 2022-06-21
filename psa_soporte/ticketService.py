@@ -64,8 +64,8 @@ class TicketService:
         db.commit()
 
     def getDescription(self, ticketID):
-            db: Session = SessionLocal()
-            return db.get(Ticket, ticketID).description
+        db: Session = SessionLocal()
+        return db.get(Ticket, ticketID).description
 
     def setSeverity(self, ticketID, newSeverity):
         db: Session = SessionLocal()
@@ -74,8 +74,8 @@ class TicketService:
         db.commit()
 
     def getSeverity(self, ticketID):
-            db: Session = SessionLocal()
-            return db.get(Ticket, ticketID).severity
+        db: Session = SessionLocal()
+        return db.get(Ticket, ticketID).severity
 
     def setPriority(self, ticketID, newPriority):
         db: Session = SessionLocal()
@@ -94,8 +94,8 @@ class TicketService:
             ticket.deadline = newDeadline
             db.commit()
         else:
-            raise Exception("La fecha de vencimiento no puede ser anterior a la actual")
+            raise Exception('A ticket cannot have a deadline before the current date')
 
     def getDeadline(self, ticketID):
-            db: Session = SessionLocal()
-            return db.get(Ticket, ticketID).deadline
+        db: Session = SessionLocal()
+        return db.get(Ticket, ticketID).deadline
