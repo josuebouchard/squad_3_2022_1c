@@ -1,0 +1,1 @@
+web: uvicorn psa_soporte.main:app --host=0.0.0.0 --port=$PORT --env-file=".env"
