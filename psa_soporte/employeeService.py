@@ -1,4 +1,4 @@
-from database import SessionLocal, get_session, Session
+from .database import SessionLocal, get_session, Session
 from .models import *
 import requests
 

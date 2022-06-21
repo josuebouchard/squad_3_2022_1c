@@ -18,7 +18,7 @@ Feature: Edición de los tickets para actualizar la información de los mismos.
         And hay un ticket
         And "2022-01-01" es anterior a la fecha actual
         When cambio la fecha de vencimiento del ticket por "2022-01-01"
-        Then se emite un error
+        Then Se emite un error
 
     Scenario: Editar un ticket agregando un empleado
         Given Soy empleado de mesa de ayuda
@@ -39,4 +39,4 @@ Feature: Edición de los tickets para actualizar la información de los mismos.
         And hay un ticket
         When edito el ticket y agrego como responsable asignado a empleado de id "5"
         And ese empleado no se encuentra en el sistema
-        Then se emite un error
+        Then Se emite un error

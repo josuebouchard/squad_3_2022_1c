@@ -45,11 +45,6 @@ def step_impl(context, nuevaFecha):
         context.error = True
 
 
-@then(u'se emite un error')
-def step_impl(context):
-    assert context.error
-
-
 @given(u'empleado de id "{empleadoId}" no está asignado a ese ticket')
 def step_impl(context, empleadoId):
     pass

@@ -14,8 +14,8 @@ from sqlalchemy.sql import func
 class Employee(Base):
     __tablename__ = "employees"
     id = Column('id', Integer, primary_key=True)
-    employeeID = Column('employeeID', Integer)
-    ticketID = Column('ticketID', ForeignKey("tickets.id"))
+    employeeID = Column('employeeid', Integer)
+    ticketID = Column('ticketid', ForeignKey("tickets.id"))
 
 
 class Ticket(Base):
