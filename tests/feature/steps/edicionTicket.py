@@ -76,7 +76,7 @@ def step_impl(context,empleadoId):
     ticketId = context.ticket.id
     try:
         service.addEmployee(empleadoId, ticketId)
-    except Exception as error:
+    except Exception:
         context.error = True
 
     assert int(empleadoId) in service.getAllEmployeesAssignedTo(ticketId)
@@ -95,3 +95,14 @@ def step_impl(context,empleadoId):
     ticketId = context.ticket.id
 
     assert int(empleadoId) not in service.getAllEmployeesAssignedTo(ticketId)
+
+
+@when(u'edito el ticket y agrego un atributo nulo')
+def step_impl(context):
+    service = TicketService()
+    ticketId = context.ticket.id
+
+    try:
+        service.setTitle(ticketId, None)
+    except Exception:
+        context.error = True

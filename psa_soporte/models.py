@@ -29,6 +29,6 @@ class Ticket(Base):
     priority = Column('priority', String)
     severity = Column('severity', String)
     state = Column('state', String, default='Abierto')
-    lastUpdateDate = Column(DateTime(timezone=True), onupdate=func.now())
+    lastUpdateDate = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     creationDate = Column(DateTime(timezone=True), server_default=func.now())
     deadline = Column(DateTime)

@@ -41,3 +41,9 @@ Feature: Edición de los tickets para actualizar la información de los mismos.
         When edito el ticket y agrego como responsable asignado a empleado de id "5"
         And ese empleado no se encuentra en el sistema
         Then Se emite un error
+
+	Scenario: Editar un ticket sin un atributo
+		Given Soy empleado de mesa de ayuda
+		And hay un ticket
+        When edito el ticket y agrego un atributo nulo
+		Then Se emite un error
