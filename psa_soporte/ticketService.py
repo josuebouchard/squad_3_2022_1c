@@ -1,7 +1,8 @@
 from datetime import datetime
-from psa_soporte.database import SessionLocal, get_session, Session
+from psa_soporte.database import SessionLocal, Session
 from .models import *
 from psa_soporte.employeeService import EmployeeService
+
 
 class TicketService:
     def _init_(self):
@@ -13,17 +14,33 @@ class TicketService:
         db.commit()
         return exists
 
-    def createTicket(self, title, description, priority, severity, employees, deadline, creationDate=datetime.today()):
+    def createTicket(
+        self,
+        title,
+        description,
+        priority,
+        severity,
+        employees,
+        deadline,
+        creationDate=datetime.today(),
+    ):
         if None in (title, description, priority, severity, deadline):
-            raise Exception('Cannot create a ticket until all atributes are filled')
+            raise Exception("Cannot create a ticket until all atributes are filled")
 
         if deadline < creationDate:
-            raise Exception('Cannot create a ticket with a deadline before the current date')
+            raise Exception(
+                "Cannot create a ticket with a deadline before the current date"
+            )
 
         db: Session = SessionLocal()
 
-        ticket = Ticket(title=title, description=description,
-                        priority=priority, severity=severity, deadline=deadline)
+        ticket = Ticket(
+            title=title,
+            description=description,
+            priority=priority,
+            severity=severity,
+            deadline=deadline,
+        )
 
         db.add(ticket)
         db.commit()
@@ -51,7 +68,7 @@ class TicketService:
         ticket = db.get(Ticket, ticketID)
 
         if ticket.state == "Cerrado":
-            raise Exception('Cannot close a ticket that is already closed')
+            raise Exception("Cannot close a ticket that is already closed")
 
         ticket.state = "Cerrado"
         db.commit()
@@ -68,7 +85,7 @@ class TicketService:
         ticket = db.get(Ticket, ticketID)
         ticket.title = newTitle
         db.commit()
-        
+
     def getTitle(self, ticketID):
         self.checkTicket(ticketID)
         db: Session = SessionLocal()
@@ -122,7 +139,7 @@ class TicketService:
             ticket.deadline = newDeadline
             db.commit()
         else:
-            raise Exception('A ticket cannot have a deadline before the current date')
+            raise Exception("A ticket cannot have a deadline before the current date")
 
     def getDeadline(self, ticketID):
         self.checkTicket(ticketID)
@@ -131,8 +148,8 @@ class TicketService:
 
     def checkTicket(self, ticketID):
         if not self.containsTicket(ticketID):
-            raise Exception('Cannot edit a ticket that does not exist')
+            raise Exception("Cannot edit a ticket that does not exist")
 
     def checkAtribute(self, atribute):
         if not atribute:
-            raise Exception('The new atribute must not be null')
+            raise Exception("The new atribute must not be null")
