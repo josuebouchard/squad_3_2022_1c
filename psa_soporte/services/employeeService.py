@@ -1,5 +1,5 @@
-from .database import SessionLocal, get_session, Session
-from .models import *
+from psa_soporte.database import SessionLocal, Session
+from psa_soporte.models import Ticket, Employee
 import requests
 
 
@@ -7,8 +7,9 @@ url = "https://anypoint.mulesoft.com/mocking/api/v1/sources/exchange/assets/754f
 
 
 class EmployeeService:
-    def __init__(self):
-        pass
+
+    def addEmployee(self, employeeID, ticketID):
+        return self.addEmployees([employeeID], ticketID)
 
     def addEmployees(self, employeesID, ticketID):
         # employeesID es una lista con los ids de los empleados
@@ -64,6 +65,3 @@ class EmployeeService:
         db.query(Employee).filter_by(employeeID=employeeID, ticketID=ticketID).delete()
 
         db.commit()
-
-    def addEmployee(self, employeeID, ticketID):
-        return self.addEmployees([employeeID], ticketID)

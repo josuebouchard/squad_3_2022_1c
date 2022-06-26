@@ -1,6 +1,6 @@
-from behave import *
-from psa_soporte.ticketService import TicketService
 from datetime import datetime
+from behave import *
+from psa_soporte.services import TicketService
 
 ticketService = TicketService()
 

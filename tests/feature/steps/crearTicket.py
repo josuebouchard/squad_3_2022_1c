@@ -1,5 +1,5 @@
 from behave import *
-from psa_soporte.ticketService import TicketService
+from psa_soporte.services import TicketService
 from datetime import datetime
 
 ticketService = TicketService()
