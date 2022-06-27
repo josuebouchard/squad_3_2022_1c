@@ -1,6 +1,6 @@
-from behave import *
-from psa_soporte.ticketService import TicketService
 from datetime import datetime
+from behave import *
+from psa_soporte.services import TicketService
 
 ticketService = TicketService()
 
@@ -38,12 +38,13 @@ def step_impl(context):
     service = TicketService()
     ticketId = context.ticket.id
 
-    service.closeTicket(ticketId)
+    service.updateTicket(ticketId, {'state': 'Cerrado'})
 
 
 @then("se puede cambiar el estado del ticket")
 def step_impl(context):
     service = TicketService()
     ticketId = context.ticket.id
+    ticket = service.getTicket(ticketId)
 
-    assert service.getState(ticketId) == "Cerrado"
+    assert ticket.state == "Cerrado"
