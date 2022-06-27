@@ -21,7 +21,7 @@ class TicketService:
         deadline: DateTime,
     ):
         self._assert_fields_are_not_null(
-            title, description, priority, severity, employees, deadline
+            [title, description, priority, severity, employees, deadline]
         )
         self._assert_deadline_is_valid(deadline)
 
@@ -45,7 +45,7 @@ class TicketService:
 
     def getTicket(self, ticketID: int) -> Optional[Ticket]:
         db: Session
-        with SessionLocal as db:
+        with SessionLocal() as db:
             ticket = db.query(Ticket).filter_by(id=ticketID).first()
             return ticket
 
@@ -58,6 +58,13 @@ class TicketService:
     def updateTicket(self, id: int, fields: dict):
         """Example: `service.updateTicket(21, {'title': 'nuevo titulo'})`"""
         assert id != None
+
+        self._assert_fields_are_not_null(
+            list(fields.values())
+        )
+
+        if 'deadline' in fields:
+            self._assert_deadline_is_valid(fields['deadline'])
 
         db: Session
         with SessionLocal() as db:
@@ -80,11 +87,11 @@ class TicketService:
 
     # Validations
 
-    def _assert_fields_are_not_null(*fields) -> None:
+    def _assert_fields_are_not_null(self, fields) -> None:
         if None in fields:
             raise Exception("Cannot create a ticket until all atributes are filled")
 
-    def _assert_deadline_is_valid(deadline, creationDate=datetime.today()) -> None:
+    def _assert_deadline_is_valid(self, deadline, creationDate=datetime.today()) -> None:
         if deadline < creationDate:
             raise Exception(
                 "Cannot create a ticket with a deadline before the current date"
