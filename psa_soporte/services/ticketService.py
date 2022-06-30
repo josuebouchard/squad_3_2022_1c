@@ -4,7 +4,6 @@ from psa_soporte.database import SessionLocal, Session
 from psa_soporte.models import *
 from .employeeService import EmployeeService
 
-
 class TicketService:
     __slots__ = ["_employee_service"]
 
@@ -39,7 +38,7 @@ class TicketService:
             db.commit()
             db.refresh(ticket)
 
-            self._employee_service.addEmployees(employees, ticket.id)
+            """self._employee_service.addEmployees(employees, ticket.id)"""
 
             return ticket
 
@@ -73,6 +72,17 @@ class TicketService:
             )
             db.query(Ticket).filter(Ticket.id == id).update(fields, synchronize_session='evaluate')
             db.commit()
+    
+ 
+
+    def deleteTicket(self, id: int):
+        db: Session
+        with SessionLocal() as db:
+            ticket = db.query(Ticket).filter_by(id=id).first()
+            db.delete(ticket)
+            db.commit()
+            return ticket
+        
 
     # Employee methods
 
@@ -96,3 +106,4 @@ class TicketService:
             raise Exception(
                 "Cannot create a ticket with a deadline before the current date"
             )
+
