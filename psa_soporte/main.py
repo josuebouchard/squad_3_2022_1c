@@ -23,14 +23,14 @@ app = FastAPI()
 # Tickets
 
 
-@app.get("/tickets")
+@app.get("/tickets", tags=["tickets"])
 def list_tickets():
     ticket_service = TicketService()
     tickets = ticket_service.allTickets()
     return tickets
 
 
-@app.post("/tickets", response_model=SchemasTicket)
+@app.post("/tickets", response_model=SchemasTicket, tags=["tickets"])
 def create_ticket(newTicket: TicketPost):
     ticket_service = TicketService()
     ticket = ticket_service.createTicket(
@@ -44,15 +44,15 @@ def create_ticket(newTicket: TicketPost):
     return ticket
 
 
-@app.get("/tickets/{ticket_id}", response_model=SchemasTicket)
+@app.get("/tickets/{ticket_id}", response_model=SchemasTicket, tags=["tickets"])
 def get_ticket(ticket_id: int):
     ticket_service = TicketService()
     ticket = ticket_service.getTicket(ticket_id)
     return ticket
 
 
-@app.put("/tickets/{ticket_id}")
-def update_ticket(ticket_id: int, updated_ticket: TicketUpdate):
+@app.put("/tickets/{ticket_id}", tags=["tickets"])
+def update_ticket(ticket_id: int, updated_ticket: TicketUpdate, tags=["tickets"]):
     dict = {
         "title": updated_ticket.title,
         "description": updated_ticket.description,
@@ -67,7 +67,7 @@ def update_ticket(ticket_id: int, updated_ticket: TicketUpdate):
     return ticket
 
 
-@app.delete("/tickets/{ticket_id}", response_model=SchemasTicket)
+@app.delete("/tickets/{ticket_id}", response_model=SchemasTicket, tags=["tickets"])
 def delete_ticket(ticket_id: int):
     ticket_service = TicketService()
     ticket = ticket_service.deleteTicket(ticket_id)
@@ -77,21 +77,21 @@ def delete_ticket(ticket_id: int):
 # Employees
 
 
-@app.get("/tickets/{ticket_id}/employees", response_model=[])
+@app.get("/tickets/{ticket_id}/employees", tags=["employees"])
 def list_employees(ticket_id: int):
     ticket_service = TicketService()
     employees = ticket_service.getAllEmployeesAssignedTo(ticket_id)
     return employees
 
 
-@app.post("/tickets/{ticket_id}/employees/{employee_id}", response_model=bool)
+@app.post("/tickets/{ticket_id}/employees/{employee_id}", response_model=bool, tags=["employees"])
 def update_employees(ticket_id: int, employee_id: int):
     ticket_service = TicketService()
     success = ticket_service.addEmployee(employee_id, ticket_id)
     return success
 
 
-@app.delete("/tickets/{ticket_id}/employees/{employee_id}")
+@app.delete("/tickets/{ticket_id}/employees/{employee_id}", tags=["employees"])
 def remove_employee(ticket_id: int, employee_id: int):
     ticket_service = TicketService()
     ticket_service.removeEmployeeFromTicket(employee_id, ticket_id)
