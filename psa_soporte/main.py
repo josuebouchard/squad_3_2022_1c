@@ -20,11 +20,6 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
-@app.get("/")
-def index():
-    return RedirectResponse(url="/docs/")
-
-
 # Tickets
 
 
