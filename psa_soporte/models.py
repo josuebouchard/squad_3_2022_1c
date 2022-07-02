@@ -13,7 +13,7 @@ table employees
 
 class Employee(Base):
     __tablename__ = "employees"
-    
+
     id = Column("id", Integer, primary_key=True)
     employeeID = Column("employeeid", Integer)
     ticketID = Column("ticketid", ForeignKey("tickets.id"))

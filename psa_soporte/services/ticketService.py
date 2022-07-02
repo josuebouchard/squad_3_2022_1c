@@ -4,6 +4,7 @@ from psa_soporte.database import SessionLocal, Session
 from psa_soporte.models import *
 from .employeeService import EmployeeService
 
+
 class TicketService:
     __slots__ = ["_employee_service"]
 
@@ -58,22 +59,18 @@ class TicketService:
         """Example: `service.updateTicket(21, {'title': 'nuevo titulo'})`"""
         assert id != None
 
-        self._assert_fields_are_not_null(
-            list(fields.values())
-        )
+        self._assert_fields_are_not_null(list(fields.values()))
 
-        if 'deadline' in fields:
-            self._assert_deadline_is_valid(fields['deadline'])
+        if "deadline" in fields:
+            self._assert_deadline_is_valid(fields["deadline"])
 
         db: Session
         with SessionLocal() as db:
-            db.execute(
-                select()
+            db.execute(select())
+            db.query(Ticket).filter(Ticket.id == id).update(
+                fields, synchronize_session="evaluate"
             )
-            db.query(Ticket).filter(Ticket.id == id).update(fields, synchronize_session='evaluate')
             db.commit()
-    
- 
 
     def deleteTicket(self, id: int):
         db: Session
@@ -82,7 +79,6 @@ class TicketService:
             db.delete(ticket)
             db.commit()
             return ticket
-        
 
     # Employee methods
 
@@ -101,9 +97,10 @@ class TicketService:
         if None in fields:
             raise Exception("Cannot create a ticket until all atributes are filled")
 
-    def _assert_deadline_is_valid(self, deadline, creationDate=datetime.today()) -> None:
+    def _assert_deadline_is_valid(
+        self, deadline, creationDate=datetime.today()
+    ) -> None:
         if deadline < creationDate:
             raise Exception(
                 "Cannot create a ticket with a deadline before the current date"
             )
-

@@ -4,40 +4,41 @@ from typing import List, Optional
 
 
 class Ticket(BaseModel):
-        id: int
-        title: str
-        description: str
-        priority: str # PRIORIDAD_ALTA, PRIORIDAD_MEDIA, PRIORIDAD_BAJA
-        severity: str # S1, S2, S3, S4
-        state: str # ABIERTO, CERRADO, EN_PROGRESO
-        creationDate:datetime
-        lastUpdateDate: datetime
-        deadline: datetime
+    id: int
+    title: str
+    description: str
+    priority: str  # PRIORIDAD_ALTA, PRIORIDAD_MEDIA, PRIORIDAD_BAJA
+    severity: str  # S1, S2, S3, S4
+    state: str  # ABIERTO, CERRADO, EN_PROGRESO
+    creationDate: datetime
+    lastUpdateDate: datetime
+    deadline: datetime
 
-        class Config:
-                orm_mode = True
+    class Config:
+        orm_mode = True
+
 
 class TicketPost(BaseModel):
-        title: str
-        description: str
-        priority: str # PRIORIDAD_ALTA, PRIORIDAD_MEDIA, PRIORIDAD_BAJA
-        severity: str # S1, S2, S3, S4
-        employees: List[int]
-        deadline: datetime
-        
+    title: str
+    description: str
+    priority: str  # PRIORIDAD_ALTA, PRIORIDAD_MEDIA, PRIORIDAD_BAJA
+    severity: str  # S1, S2, S3, S4
+    employees: List[int]
+    deadline: datetime
 
-        class Config:
-                orm_mode = True
+    class Config:
+        orm_mode = True
+
 
 class TicketUpdate(BaseModel):
-        title: str
-        description: str
-        priority: str # PRIORIDAD_ALTA, PRIORIDAD_MEDIA, PRIORIDAD_BAJA
-        severity: str # S1, S2, S3, S4
-        state: str # ABIERTO, CERRADO, EN_PROGRESO
-        lastUpdateDate: datetime
-        deadline: datetime
-        employees: List[int]
+    title: str
+    description: str
+    priority: str  # PRIORIDAD_ALTA, PRIORIDAD_MEDIA, PRIORIDAD_BAJA
+    severity: str  # S1, S2, S3, S4
+    state: str  # ABIERTO, CERRADO, EN_PROGRESO
+    lastUpdateDate: datetime
+    deadline: datetime
+    employees: List[int]
 
-        class Config:
-                orm_mode = True
+    class Config:
+        orm_mode = True

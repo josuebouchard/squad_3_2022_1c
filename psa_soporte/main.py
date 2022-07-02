@@ -84,7 +84,11 @@ def list_employees(ticket_id: int):
     return employees
 
 
-@app.post("/tickets/{ticket_id}/employees/{employee_id}", response_model=bool, tags=["employees"])
+@app.post(
+    "/tickets/{ticket_id}/employees/{employee_id}",
+    response_model=bool,
+    tags=["employees"],
+)
 def update_employees(ticket_id: int, employee_id: int):
     ticket_service = TicketService()
     success = ticket_service.addEmployee(employee_id, ticket_id)
