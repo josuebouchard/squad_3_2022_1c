@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 from psa_soporte.database import SessionLocal, Session
 from psa_soporte.models import *
@@ -98,7 +98,9 @@ class TicketService:
             raise Exception("Cannot create a ticket until all atributes are filled")
 
     def _assert_deadline_is_valid(
-        self, deadline, creationDate=datetime.today()
+        self,
+        deadline,
+        creationDate=datetime.today().replace(tzinfo=timezone.utc),
     ) -> None:
         if deadline < creationDate:
             raise Exception(
