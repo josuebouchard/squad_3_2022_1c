@@ -2,6 +2,7 @@ import json
 import uvicorn
 from os import environ
 from fastapi import FastAPI, Response
+from fastapi.middleware.cors import CORSMiddleware
 from psa_soporte.services import TicketService, InvalidEmployee
 from psa_soporte.schemas import Ticket as SchemasTicket, TicketUpdate, TicketPost
 from .database import engine
@@ -17,6 +18,14 @@ models.Base.metadata.create_all(bind=engine)
 # ==============================================
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # Productos
