@@ -8,7 +8,7 @@ from .employeeService import EmployeeService
 class TicketService:
     __slots__ = ["_employee_service"]
 
-    def __init__(self, employee_service=EmployeeService()):
+    def __init__(self, employee_service: EmployeeService = EmployeeService()):
         self._employee_service = employee_service
 
     def createTicket(
@@ -17,11 +17,10 @@ class TicketService:
         description: str,
         priority,
         severity,
-        employees: list,
         deadline: DateTime,
     ):
         self._assert_fields_are_not_null(
-            [title, description, priority, severity, employees, deadline]
+            [title, description, priority, severity, deadline]
         )
         self._assert_deadline_is_valid(deadline)
 
@@ -38,8 +37,6 @@ class TicketService:
             db.add(ticket)
             db.commit()
             db.refresh(ticket)
-
-            """self._employee_service.addEmployees(employees, ticket.id)"""
 
             return ticket
 
@@ -72,13 +69,16 @@ class TicketService:
             )
             db.commit()
 
-    def deleteTicket(self, id: int):
+    def deleteTicket(self, id: int) -> bool:
+        """Returns `True` if ticket was found, else returns `false`"""
         db: Session
         with SessionLocal() as db:
             ticket = db.query(Ticket).filter_by(id=id).first()
+            if ticket == None:
+                return False
             db.delete(ticket)
             db.commit()
-            return ticket
+            return True
 
     # Employee methods
 

@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 
 
 class Ticket(BaseModel):
@@ -23,7 +23,6 @@ class TicketPost(BaseModel):
     description: str
     priority: str  # PRIORIDAD_ALTA, PRIORIDAD_MEDIA, PRIORIDAD_BAJA
     severity: str  # S1, S2, S3, S4
-    employees: List[int]
     deadline: datetime
 
     class Config:

@@ -1,10 +1,8 @@
 import uvicorn
 from os import environ
-from datetime import datetime
-from fastapi import FastAPI
-from psa_soporte.services.ticketService import TicketService
+from fastapi import FastAPI, Response
+from psa_soporte.services import TicketService, InvalidEmployee
 from psa_soporte.schemas import Ticket as SchemasTicket, TicketUpdate, TicketPost
-from starlette.responses import RedirectResponse
 from .database import engine
 from . import models
 
@@ -38,7 +36,6 @@ def create_ticket(newTicket: TicketPost):
         newTicket.description,
         newTicket.priority,
         newTicket.severity,
-        newTicket.employees,
         newTicket.deadline,
     )
     return ticket
@@ -52,14 +49,13 @@ def get_ticket(ticket_id: int):
 
 
 @app.put("/tickets/{ticket_id}", tags=["tickets"])
-def update_ticket(ticket_id: int, updated_ticket: TicketUpdate, tags=["tickets"]):
+def update_ticket(ticket_id: int, updated_ticket: TicketUpdate):
     dict = {
         "title": updated_ticket.title,
         "description": updated_ticket.description,
         "priority": updated_ticket.priority,
         "severity": updated_ticket.severity,
         "state": updated_ticket.state,
-        "lastUpdateDate": datetime.now(),
         "deadline": updated_ticket.deadline,
     }
     ticket_service = TicketService()
@@ -67,11 +63,11 @@ def update_ticket(ticket_id: int, updated_ticket: TicketUpdate, tags=["tickets"]
     return ticket
 
 
-@app.delete("/tickets/{ticket_id}", response_model=SchemasTicket, tags=["tickets"])
+@app.delete("/tickets/{ticket_id}", tags=["tickets"])
 def delete_ticket(ticket_id: int):
     ticket_service = TicketService()
-    ticket = ticket_service.deleteTicket(ticket_id)
-    return ticket
+    ticket_service.deleteTicket(ticket_id)
+    return Response(status_code=200)
 
 
 # Employees
@@ -84,15 +80,15 @@ def list_employees(ticket_id: int):
     return employees
 
 
-@app.post(
-    "/tickets/{ticket_id}/employees/{employee_id}",
-    response_model=bool,
-    tags=["employees"],
-)
-def update_employees(ticket_id: int, employee_id: int):
+@app.post("/tickets/{ticket_id}/employees/{employee_id}", tags=["employees"])
+def add_employee(ticket_id: int, employee_id: int):
     ticket_service = TicketService()
-    success = ticket_service.addEmployee(employee_id, ticket_id)
-    return success
+    try:
+        ticket_service.addEmployee(employee_id, ticket_id)
+    except InvalidEmployee as exception:
+        return Response(content=str(exception), status_code=406)
+
+    return Response(status_code=200)
 
 
 @app.delete("/tickets/{ticket_id}/employees/{employee_id}", tags=["employees"])
