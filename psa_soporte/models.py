@@ -13,7 +13,7 @@ table employees
 
 class Employee(Base):
     __tablename__ = "employees"
-    
+
     id = Column("id", Integer, primary_key=True)
     employeeID = Column("employeeid", Integer)
     ticketID = Column("ticketid", ForeignKey("tickets.id"))
@@ -29,7 +29,9 @@ class Ticket(Base):
     severity = Column("severity", String)
     state = Column("state", String, default="Abierto")
     lastUpdateDate = Column(
-        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+        DateTime(timezone=False),
+        server_default=func.now(),
+        onupdate=func.now(),
     )
-    creationDate = Column(DateTime(timezone=True), server_default=func.now())
+    creationDate = Column(DateTime(timezone=False), server_default=func.now())
     deadline = Column(DateTime)

@@ -1,13 +1,20 @@
 from psa_soporte.database import SessionLocal, Session
-from psa_soporte.models import Ticket, Employee
+from psa_soporte.models import Employee
+from .exceptions import InvalidEmployee
 import requests
 
 
 url = "https://anypoint.mulesoft.com/mocking/api/v1/sources/exchange/assets/754f50e8-20d8-4223-bbdc-56d50131d0ae/recursos-psa/1.0.0/m/api/recursos"
 
 
-class EmployeeService:
+def _get_valid_employee_ids():
+    employees = requests.get(url).json()
+    ids = [int(employee["legajo"]) for employee in employees]
 
+    return ids
+
+
+class EmployeeService:
     def addEmployee(self, employeeID, ticketID):
         return self.addEmployees([employeeID], ticketID)
 
@@ -16,19 +23,13 @@ class EmployeeService:
         if len(employeesID) == 0:
             raise Exception("Cannot create a ticket without any assigned person")
 
-        employees = requests.get(url).json()
-        ids = []
-
-        for employee in employees:
-            ids.append(int(employee["legajo"]))
-
         db: Session = SessionLocal()
 
+        valid_ids = _get_valid_employee_ids()
+
         for employeeID in employeesID:
-            if int(employeeID) not in ids:
-                raise Exception(
-                    "Cannot create a ticket with an assigned person who is not in the system"
-                )
+            if employeeID not in valid_ids:
+                raise InvalidEmployee(employeeID)
 
             employee = Employee(employeeID=employeeID, ticketID=ticketID)
 
