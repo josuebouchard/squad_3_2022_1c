@@ -18,17 +18,17 @@ class EmployeeService:
     def addEmployee(self, employeeID, ticketID):
         return self.addEmployees([employeeID], ticketID)
 
-    def addEmployees(self, employeesID, ticketID):
-        # employeesID es una lista con los ids de los empleados
-        if len(employeesID) == 0:
+    def addEmployees(self, employeesIDs, ticketID):
+        # employeesIDs es una lista con los ids de los empleados
+        if len(employeesIDs) == 0:
             raise Exception("Cannot create a ticket without any assigned person")
 
         db: Session = SessionLocal()
 
         valid_ids = _get_valid_employee_ids()
 
-        for employeeID in employeesID:
-            if employeeID not in valid_ids:
+        for employeeID in employeesIDs:
+            if int(employeeID) not in valid_ids:
                 raise InvalidEmployee(employeeID)
 
             employee = Employee(employeeID=employeeID, ticketID=ticketID)
