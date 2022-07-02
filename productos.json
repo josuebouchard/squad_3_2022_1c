@@ -1,0 +1,34 @@
+[
+  {
+    "id": 33,
+    "name": "PSA ERP",
+    "versions": [
+      {
+        "id": 44,
+        "name": "V1"
+      },
+      {
+        "id": 45,
+        "name": "V1.2"
+      }
+    ]
+  },
+  {
+    "id": 50,
+    "name": "PSA CRM",
+    "versions": [
+      {
+        "id": 48,
+        "name": "v1"
+      },
+      {
+        "id": 50,
+        "name": "v1.2"
+      },
+      {
+        "id": 51,
+        "name": "v2"
+      }
+    ]
+  }
+]

@@ -1,3 +1,4 @@
+import json
 import uvicorn
 from os import environ
 from fastapi import FastAPI, Response
@@ -16,6 +17,15 @@ models.Base.metadata.create_all(bind=engine)
 # ==============================================
 
 app = FastAPI()
+
+
+# Productos
+@app.get("/products", tags=["products"])
+def list_products():
+    with open("productos.json") as file:
+        products = json.loads(file.read())
+
+    return products
 
 
 # Tickets
