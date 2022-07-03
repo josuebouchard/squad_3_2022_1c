@@ -14,20 +14,20 @@ table employees
 class Employee(Base):
     __tablename__ = "employees"
 
-    id = Column("id", Integer, primary_key=True)
-    employeeID = Column("employeeid", Integer)
-    ticketID = Column("ticketid", ForeignKey("tickets.id"))
+    id = Column(Integer, primary_key=True)
+    employeeID = Column(Integer)
+    ticketID = Column(ForeignKey("tickets.id"))
 
 
 class Ticket(Base):
     __tablename__ = "tickets"
 
-    id = Column("id", Integer, primary_key=True)
-    title = Column("title", String)
-    description = Column("description", String)
-    priority = Column("priority", String)
-    severity = Column("severity", String)
-    state = Column("state", String, default="Abierto")
+    id = Column(Integer, primary_key=True)
+    title = Column(String)
+    description = Column(String)
+    priority = Column(String)
+    severity = Column(String)
+    state = Column(String, default="Abierto")
     lastUpdateDate = Column(
         DateTime(timezone=False),
         server_default=func.now(),
