@@ -4,13 +4,6 @@ from .database import Base
 from .constants import *
 
 
-"""
-table employees
-|  ticketID=2    |    employeeID = 3  |
-|  ticketID=2    |    employeeID = 4  |
-"""
-
-
 class Employee(Base):
     __tablename__ = "employees"
 
