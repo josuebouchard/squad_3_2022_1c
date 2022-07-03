@@ -18,6 +18,8 @@ models.Base.metadata.create_all(bind=engine)
 # ==============================================
 
 
+# TODO: add error handlers
+
 app = FastAPI()
 ticket_service = TicketService()
 
@@ -54,6 +56,7 @@ def create_ticket(newTicket: TicketPost):
         title=newTicket.title,
         description=newTicket.description,
         clientId=newTicket.clientId,
+        tasks=newTicket.tasks,
         priority=newTicket.priority,
         severity=newTicket.severity,
         employees=[],
@@ -72,16 +75,7 @@ def get_ticket(ticket_id: int):
 
 @app.put("/tickets/{ticket_id}", tags=["tickets"])
 def update_ticket(ticket_id: int, updated_ticket: TicketUpdate):
-    dict = {
-        "title": updated_ticket.title,
-        "description": updated_ticket.description,
-        "priority": updated_ticket.priority,
-        "severity": updated_ticket.severity,
-        "state": updated_ticket.state,
-        "deadline": updated_ticket.deadline,
-    }
-
-    ticket = ticket_service.updateTicket(ticket_id, dict)
+    ticket = ticket_service.updateTicket(ticket_id, updated_ticket.dict())
     return ticket
 
 

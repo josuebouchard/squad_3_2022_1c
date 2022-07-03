@@ -23,6 +23,7 @@ class TicketPost(BaseModel):
     title: str
     description: str
     clientId: int
+    tasks: List[int]
     priority: str  # PRIORIDAD_ALTA, PRIORIDAD_MEDIA, PRIORIDAD_BAJA
     severity: str  # S1, S2, S3, S4
     deadline: datetime
@@ -34,10 +35,11 @@ class TicketPost(BaseModel):
 class TicketUpdate(BaseModel):
     title: str
     description: str
+    clientId: int
+    tasks: List[int]
     priority: str  # PRIORIDAD_ALTA, PRIORIDAD_MEDIA, PRIORIDAD_BAJA
     severity: str  # S1, S2, S3, S4
     state: str  # ABIERTO, CERRADO, EN_PROGRESO
-    lastUpdateDate: datetime
     deadline: datetime
     employees: List[int]
 
