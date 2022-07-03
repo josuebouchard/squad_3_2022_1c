@@ -31,9 +31,9 @@ Feature: Edición de los tickets para actualizar la información de los mismos.
     Scenario: Editar un ticket removiendo un empleado
         Given Soy empleado de mesa de ayuda
         And hay un ticket
-        And empleado de id "2" está asignado a ese ticket
-        When edito el ticket y remuevo como responsable asignado a empleado de id "2"
-        Then empleado de id "2" ahora ya no está asignado a ese ticket.
+        And empleado de id "1" está asignado a ese ticket
+        When edito el ticket y remuevo como responsable asignado a empleado de id "1"
+        Then empleado de id "1" ahora ya no está asignado a ese ticket.
 
     Scenario: Editar un ticket con responsable asignado que no se encuentra en el sistema
         Given Soy empleado de mesa de ayuda

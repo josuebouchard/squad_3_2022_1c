@@ -82,11 +82,13 @@ def step_impl(context, empleadoId):
 def step_impl(context, empleadoId):
     service = TicketService()
     ticketID = context.ticket.id
-    try:
-        service.addEmployee(empleadoId, ticketID)
-    except Exception:
-        context.error = True
-
+    #try:
+    #    service.addEmployee(empleadoId, ticketID)
+    #except Exception:
+    #    context.error = True
+    print(empleadoId)
+    print(ticketID)
+    print(service.getAllEmployeesAssignedTo(ticketID))
     assert int(empleadoId) in service.getAllEmployeesAssignedTo(ticketID)
 
 

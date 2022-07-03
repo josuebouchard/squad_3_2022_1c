@@ -23,6 +23,8 @@ def step_impl(context):
         context.ticket = ticketService.createTicket(
             title=model["título"],
             description=model["descripción"],
+            clientId=model["IDcliente"],
+            tasks=model["tareas"],
             priority=model["prioridad"],
             severity=model["severidad"],
             employees=model["responsables"].split(","),
@@ -41,6 +43,8 @@ def step_impl(context, unaFechaDeVencimiento):
         context.ticket = ticketService.createTicket(
             title="No se ve el botón de pago",
             description="Al momento de realizar el pago, el botón de pago desaparece de la pantalla",
+            clientId=1,
+            tasks=[1],
             priority="Alta",
             severity="s1",
             employees=[1],
@@ -58,6 +62,8 @@ def step_impl(context, id):
         context.ticket = ticketService.createTicket(
             title="No se ve el botón de pago",
             description="Al momento de realizar el pago, el botón de pago desaparece de la pantalla",
+            clientId=1,
+            tasks=[1],
             priority="Alta",
             severity="s1",
             employees=[id],
@@ -79,6 +85,8 @@ def step_impl(context):
         context.ticket = ticketService.createTicket(
             title=None,
             description="Al momento de realizar el pago, el botón de pago desaparece de la pantalla",
+            clientId=1,
+            tasks=[1],
             priority="Alta",
             severity="s1",
             employees=[1],
@@ -96,6 +104,7 @@ def step_impl(context):
 
 @then("Se emite un error")
 def step_impl(context):
+    print(context.error)
     assert context.error != None
 
 

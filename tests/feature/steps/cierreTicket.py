@@ -7,6 +7,8 @@ ticketService = TicketService()
 atributos = {
     "título": "No se ve el botón de pago",
     "descripción": "Al momento de realizar el pago, el botón de pago desaparece de la pantalla",
+    "IDcliente": 1,
+    "tareas": [1],
     "prioridad": "Alta",
     "severidad": "s1",
     "empleados": [1],
@@ -23,6 +25,8 @@ def step_impl(context):
         context.ticket = ticketService.createTicket(
             title=atributos["título"],
             description=atributos["descripción"],
+            clientId=atributos["IDcliente"],
+            tasks=atributos["tareas"],
             priority=atributos["prioridad"],
             severity=atributos["severidad"],
             employees=atributos["empleados"],

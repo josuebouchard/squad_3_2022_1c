@@ -6,6 +6,8 @@ Feature: Creación de Ticket
 			| propiedad         | valor 									  |
 			| título     		| Entidades desaparecidas 					  |
 			| descripción   	| Desaparecieron entidades de mi inventario   |
+			| IDcliente     	| 1 		  							      |
+			| tareas         	| 1 		  							      |
 			| prioridad     	| Alta 		  							      |
 			| severidad 		| s3 		  							      |
 			| producto 			| Sistema de inventarios versión 1.1.3	      |
