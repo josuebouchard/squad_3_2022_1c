@@ -17,7 +17,9 @@ models.Base.metadata.create_all(bind=engine)
 
 # ==============================================
 
+
 app = FastAPI()
+ticket_service = TicketService()
 
 app.add_middleware(
     CORSMiddleware,
@@ -42,28 +44,29 @@ def list_products():
 
 @app.get("/tickets", tags=["tickets"])
 def list_tickets():
-    ticket_service = TicketService()
     tickets = ticket_service.allTickets()
     return tickets
 
 
-@app.post("/tickets", response_model=SchemasTicket, tags=["tickets"])
+@app.post("/tickets", tags=["tickets"])
 def create_ticket(newTicket: TicketPost):
-    ticket_service = TicketService()
     ticket = ticket_service.createTicket(
-        newTicket.title,
-        newTicket.description,
-        newTicket.priority,
-        newTicket.severity,
-        newTicket.deadline,
+        title=newTicket.title,
+        description=newTicket.description,
+        clientId=newTicket.clientId,
+        priority=newTicket.priority,
+        severity=newTicket.severity,
+        employees=[],
+        deadline=newTicket.deadline,
     )
     return ticket
 
 
 @app.get("/tickets/{ticket_id}", response_model=SchemasTicket, tags=["tickets"])
 def get_ticket(ticket_id: int):
-    ticket_service = TicketService()
     ticket = ticket_service.getTicket(ticket_id)
+    if ticket == None:
+        return Response(status_code=404)
     return ticket
 
 
@@ -77,14 +80,13 @@ def update_ticket(ticket_id: int, updated_ticket: TicketUpdate):
         "state": updated_ticket.state,
         "deadline": updated_ticket.deadline,
     }
-    ticket_service = TicketService()
+
     ticket = ticket_service.updateTicket(ticket_id, dict)
     return ticket
 
 
 @app.delete("/tickets/{ticket_id}", tags=["tickets"])
 def delete_ticket(ticket_id: int):
-    ticket_service = TicketService()
     ticket_service.deleteTicket(ticket_id)
     return Response(status_code=200)
 
@@ -94,14 +96,12 @@ def delete_ticket(ticket_id: int):
 
 @app.get("/tickets/{ticket_id}/employees", tags=["employees"])
 def list_employees(ticket_id: int):
-    ticket_service = TicketService()
     employees = ticket_service.getAllEmployeesAssignedTo(ticket_id)
     return employees
 
 
 @app.post("/tickets/{ticket_id}/employees/{employee_id}", tags=["employees"])
 def add_employee(ticket_id: int, employee_id: int):
-    ticket_service = TicketService()
     try:
         ticket_service.addEmployee(employee_id, ticket_id)
     except InvalidEmployee as exception:
@@ -112,8 +112,8 @@ def add_employee(ticket_id: int, employee_id: int):
 
 @app.delete("/tickets/{ticket_id}/employees/{employee_id}", tags=["employees"])
 def remove_employee(ticket_id: int, employee_id: int):
-    ticket_service = TicketService()
     ticket_service.removeEmployeeFromTicket(employee_id, ticket_id)
+    return Response(status_code=200)
 
 
 if __name__ == "__main__":

@@ -15,6 +15,7 @@ class TicketService:
 		self,
 		title: str,
 		description: str,
+		clientId: int,
 		priority,
 		severity,
 		employees: list,
@@ -30,13 +31,16 @@ class TicketService:
 			ticket = Ticket(
 				title=title,
 				description=description,
+				clientId=clientId,
 				priority=priority,
 				severity=severity,
 				deadline=deadline,
 			)
 
-			employeeService = EmployeeService()
-			employeeService.addEmployees(employees, ticket.id)
+			# TODO: Responsables es 1, 0..*, 1..*? El codigo comentado obliga a que sea 1..*, cuando en el modelo esta 0..*
+
+			# employeeService = EmployeeService()
+			# employeeService.addEmployees(employees, ticket.id)
 
 			db.add(ticket)
 			db.commit()
@@ -48,6 +52,9 @@ class TicketService:
 		db: Session
 		with SessionLocal() as db:
 			ticket = db.query(Ticket).filter_by(id=ticketID).first()
+
+			#TODO: no devolver clientId sino devolver data del cliente
+
 			return ticket
 
 	def allTickets(self) -> List[Ticket]:
@@ -107,7 +114,7 @@ class TicketService:
 	def _assert_deadline_is_valid(
 		self,
 		deadline,
-		creationDate=datetime.today(),#.replace(tzinfo=timezone.utc),
+		creationDate=datetime.today().replace(tzinfo=timezone.utc),
 	) -> None:
 		if deadline < creationDate:
 			raise Exception(
