@@ -15,7 +15,7 @@ class Employee(Base):
     __tablename__ = "employees"
 
     id = Column(Integer, primary_key=True)
-    employeeID = Column(Integer)
+    employeeID = Column(Integer)  # Remote foreign key to employees system
     ticketID = Column(ForeignKey("tickets.id"))
 
 
@@ -23,6 +23,7 @@ class Ticket(Base):
     __tablename__ = "tickets"
 
     id = Column(Integer, primary_key=True)
+    clientId = Column(Integer)  # Remote foreign key to clients system
     title = Column(String)
     description = Column(String)
     priority = Column(String)
