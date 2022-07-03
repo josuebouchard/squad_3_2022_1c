@@ -24,7 +24,8 @@ class TicketService:
         deadline: DateTime,
     ):
         self._assert_fields_are_not_null(
-            [title, description, clientId, priority, severity, version, employees, deadline]
+            [title, description, clientId, priority,
+                severity, version, employees, deadline]
         )
         self._assert_deadline_is_valid(deadline)
         self._assert_employees_are_valid(employees)
@@ -104,7 +105,7 @@ class TicketService:
 
     # Employee methods
 
-    def addEmployee(self, employeeID, ticketID):
+    def addEmployee(self, employeeID: int, ticketID: int):
         return self.addEmployees([employeeID], ticketID)
 
     def _get_valid_employee_ids(self):
@@ -113,13 +114,13 @@ class TicketService:
 
         return ids
 
-    def addEmployees(self, employeeIDs, ticketID):
+    def addEmployees(self, employeeIDs: list, ticketID: int):
         # employeesIDs es una lista con los ids de los empleados
 
         db: Session
         with SessionLocal() as db:
             ticket = db.query(Ticket).filter_by(id=ticketID).first()
-        
+
             valid_ids = self._get_valid_employee_ids()
             for employeeID in employeeIDs:
                 if int(employeeID) not in valid_ids:
@@ -128,7 +129,7 @@ class TicketService:
                 ticket.employees.append(Employee(employeeID=employeeID))
             db.commit()
 
-    def getAllEmployeesAssignedTo(self, ticketID):
+    def getAllEmployeesAssignedTo(self, ticketID: int):
         db: Session
         with SessionLocal() as db:
             ids = []
@@ -138,7 +139,7 @@ class TicketService:
 
             return ids
 
-    def removeEmployeeFromTicket(self, employeeID, ticketID):
+    def removeEmployeeFromTicket(self, employeeID: int, ticketID: int):
         db: Session
         with SessionLocal() as db:
             exists = (
@@ -150,7 +151,8 @@ class TicketService:
             if not exists:
                 raise EmployeeNotFoundException(employeeID)
 
-            db.query(Employee).filter_by(employeeID=employeeID, ticketID=ticketID).delete()
+            db.query(Employee).filter_by(
+                employeeID=employeeID, ticketID=ticketID).delete()
 
             db.commit()
 
