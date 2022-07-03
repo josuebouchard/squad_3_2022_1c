@@ -27,6 +27,7 @@ def step_impl(context):
             tasks=model["tareas"],
             priority=model["prioridad"],
             severity=model["severidad"],
+            version=model['version'],
             employees=model["responsables"].split(","),
             deadline=datetime.fromisoformat(model["fechaDeVencimiento"]),
         )
@@ -47,6 +48,7 @@ def step_impl(context, unaFechaDeVencimiento):
             tasks=[1],
             priority="Alta",
             severity="s1",
+            version="Version 1.0",
             employees=[1],
             deadline=datetime.fromisoformat(unaFechaDeVencimiento),
             creationDate=datetime.fromisoformat(context.fechaActual),
@@ -66,6 +68,7 @@ def step_impl(context, id):
             tasks=[1],
             priority="Alta",
             severity="s1",
+            version="Version 1.0",
             employees=[id],
             deadline=datetime.fromisoformat("2023-01-01"),
         )
@@ -89,6 +92,7 @@ def step_impl(context):
             tasks=[1],
             priority="Alta",
             severity="s1",
+            version="Version 1.0",
             employees=[1],
             deadline=datetime.fromisoformat("2023-01-01"),
         )

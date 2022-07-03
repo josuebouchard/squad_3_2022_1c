@@ -21,6 +21,7 @@ def step_impl(context):
             "title": model["titulo"],
             "description": model["descripcion"],
             "severity": model["severidad"],
+            "version": model['version'],
             "priority": model["prioridad"],
             "deadline": datetime.fromisoformat(model["fechaDeVencimiento"]),
         },
@@ -30,6 +31,7 @@ def step_impl(context):
     assert ticket.title == model["titulo"]
     assert ticket.description == model["descripcion"]
     assert ticket.severity == model["severidad"]
+    assert ticket.version == model["version"]
     assert ticket.priority == model["prioridad"]
     assert ticket.deadline == datetime.fromisoformat(model["fechaDeVencimiento"])
 
@@ -82,13 +84,10 @@ def step_impl(context, empleadoId):
 def step_impl(context, empleadoId):
     service = TicketService()
     ticketID = context.ticket.id
-    #try:
-    #    service.addEmployee(empleadoId, ticketID)
-    #except Exception:
-    #    context.error = True
-    print(empleadoId)
-    print(ticketID)
-    print(service.getAllEmployeesAssignedTo(ticketID))
+    try:
+        service.addEmployee(empleadoId, ticketID)
+    except Exception:
+        context.error = True
     assert int(empleadoId) in service.getAllEmployeesAssignedTo(ticketID)
 
 

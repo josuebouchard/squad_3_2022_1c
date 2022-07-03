@@ -2,7 +2,6 @@ from sqlalchemy import *
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from .database import Base
-from .constants import *
 
 
 class Task(Base):
@@ -32,6 +31,7 @@ class Ticket(Base):
     priority = Column(String)
     severity = Column(String)
     state = Column(String, default="Abierto")
+    version = Column(String)
     deadline = Column(DateTime)
     lastUpdateDate = Column(
         DateTime(timezone=False),

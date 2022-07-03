@@ -10,6 +10,7 @@ Feature: Creación de Ticket
 			| tareas         	| 1 		  							      |
 			| prioridad     	| Alta 		  							      |
 			| severidad 		| s3 		  							      |
+			| version           | Versión 1.0                                 |
 			| producto 			| Sistema de inventarios versión 1.1.3	      |
 			| responsables 		| 1,2                						  |
 			| fechaDeVencimiento| 2023-07-07 								  |

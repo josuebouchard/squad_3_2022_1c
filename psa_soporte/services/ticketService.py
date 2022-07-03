@@ -2,8 +2,7 @@ from datetime import datetime, timezone
 from typing import List, Optional
 from psa_soporte.database import SessionLocal, Session
 from psa_soporte.models import *
-from .exceptions import DeadlineBeforeCreationDateException, InvalidEmployee
-#from .employeeService import EmployeeService
+from .exceptions import *
 import requests
 
 url = "https://anypoint.mulesoft.com/mocking/api/v1/sources/exchange/assets/754f50e8-20d8-4223-bbdc-56d50131d0ae/recursos-psa/1.0.0/m/api/recursos"
@@ -11,9 +10,6 @@ url = "https://anypoint.mulesoft.com/mocking/api/v1/sources/exchange/assets/754f
 
 class TicketService:
     __slots__ = ["_employee_service"]
-
-    #def __init__(self):
-        #self._employee_service = employee_service
 
     def createTicket(
         self,
@@ -23,13 +19,16 @@ class TicketService:
         tasks: List[int],
         priority,
         severity,
+        version,
         employees: list,
         deadline: DateTime,
     ):
         self._assert_fields_are_not_null(
-            [title, description, priority, severity, employees, deadline]
+            [title, description, clientId, priority, severity, version, employees, deadline]
         )
         self._assert_deadline_is_valid(deadline)
+        self._assert_employees_are_valid(employees)
+        self._assert_tasks_are_valid(tasks)
 
         db: Session
         with SessionLocal() as db:
@@ -39,6 +38,7 @@ class TicketService:
                 clientId=clientId,
                 priority=priority,
                 severity=severity,
+                version=version,
                 deadline=deadline,
             )
 
@@ -77,6 +77,12 @@ class TicketService:
         if "deadline" in fields:
             self._assert_deadline_is_valid(fields["deadline"])
 
+        if "employees" in fields:
+            self._assert_employees_are_valid(fields["employees"])
+
+        if "tasks" in fields:
+            self._assert_tasks_are_valid(fields["tasks"])
+
         db: Session
         with SessionLocal() as db:
             db.execute(select())
@@ -109,50 +115,50 @@ class TicketService:
 
     def addEmployees(self, employeeIDs, ticketID):
         # employeesIDs es una lista con los ids de los empleados
-        db: Session = SessionLocal()
-        ticket = db.query(Ticket).get(ticketID)
+
+        db: Session
+        with SessionLocal() as db:
+            ticket = db.query(Ticket).filter_by(id=ticketID).first()
         
-        valid_ids = self._get_valid_employee_ids()
+            valid_ids = self._get_valid_employee_ids()
+            for employeeID in employeeIDs:
+                if int(employeeID) not in valid_ids:
+                    raise EmployeeNotFoundException(employeeID)
 
-        for employeeID in employeeIDs:
-            if int(employeeID) not in valid_ids:
-                raise InvalidEmployee(employeeID)
-
-            ticket.employees.append(Employee(employeeID=employeeID))
-        db.commit()
+                ticket.employees.append(Employee(employeeID=employeeID))
+            db.commit()
 
     def getAllEmployeesAssignedTo(self, ticketID):
-        db: Session = SessionLocal()
-        ids = []
+        db: Session
+        with SessionLocal() as db:
+            ids = []
 
-        for employee in db.query(Employee).filter_by(ticketID=ticketID).all():
-            ids.append(int(employee.employeeID))
+            for employee in db.query(Employee).filter_by(ticketID=ticketID).all():
+                ids.append(int(employee.employeeID))
 
-        return ids
+            return ids
 
     def removeEmployeeFromTicket(self, employeeID, ticketID):
-        db: Session = SessionLocal()
-
-        exists = (
-            db.query(Employee)
-            .filter_by(ticketID=ticketID, employeeID=employeeID)
-            .first()
-            is not None
-        )
-        if not exists:
-            raise Exception(
-                "Cannot remove an employee that is not assigned to that ticket"
+        db: Session
+        with SessionLocal() as db:
+            exists = (
+                db.query(Employee)
+                .filter_by(ticketID=ticketID, employeeID=employeeID)
+                .first()
+                is not None
             )
+            if not exists:
+                raise EmployeeNotFoundException(employeeID)
 
-        db.query(Employee).filter_by(employeeID=employeeID, ticketID=ticketID).delete()
+            db.query(Employee).filter_by(employeeID=employeeID, ticketID=ticketID).delete()
 
-        db.commit()
+            db.commit()
 
     # Validations
 
     def _assert_fields_are_not_null(self, fields) -> None:
         if None in fields:
-            raise Exception("Cannot create a ticket until all atributes are filled")
+            raise AllAtributesMustBeFilledException()
 
     def _assert_deadline_is_valid(
         self,
@@ -161,3 +167,11 @@ class TicketService:
     ) -> None:
         if deadline < creationDate:
             raise DeadlineBeforeCreationDateException()
+
+    def _assert_employees_are_valid(self, employees):
+        if len(employees) == 0:
+            raise MustAsignAtLeastOneEmployeeException()
+
+    def _assert_tasks_are_valid(self, tasks):
+        if len(tasks) == 0:
+            raise MustAsignAtLeastOneTaskException()
