@@ -9,8 +9,9 @@ class Task(Base):
     __tablename__ = "tasks"
 
     id = Column(Integer, primary_key=True)
-    taskId = Column(Integer) # Remote foreign key to proyect system
+    taskId = Column(Integer)  # Remote foreign key to proyect system
     ticketId = Column(ForeignKey("tickets.id"))
+
 
 class Employee(Base):
     __tablename__ = "employees"
@@ -18,6 +19,7 @@ class Employee(Base):
     id = Column(Integer, primary_key=True)
     employeeID = Column(Integer)  # Remote foreign key to employees system
     ticketID = Column(ForeignKey("tickets.id"))
+
 
 class Ticket(Base):
     __tablename__ = "tickets"

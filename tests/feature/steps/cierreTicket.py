@@ -38,7 +38,7 @@ def step_impl(context):
     service = TicketService()
     ticketId = context.ticket.id
 
-    service.updateTicket(ticketId, {'state': 'Cerrado'})
+    service.updateTicket(ticketId, {"state": "Cerrado"})
 
 
 @then("se puede cambiar el estado del ticket")

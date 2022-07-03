@@ -40,10 +40,8 @@ class TicketService:
                 deadline=deadline,
             )
 
-            # TODO: Responsables es 1, 0..*, 1..*? El codigo comentado obliga a que sea 1..*, cuando en el modelo esta 0..*
-
-            # employeeService = EmployeeService()
-            # employeeService.addEmployees(employees, ticket.id)
+            for employeeId in employees:
+                ticket.employees.append(Employee(employeeID=employeeId))
 
             db.add(ticket)
             db.commit()

@@ -59,7 +59,7 @@ def create_ticket(newTicket: TicketPost):
         tasks=newTicket.tasks,
         priority=newTicket.priority,
         severity=newTicket.severity,
-        employees=[],
+        employees=newTicket.employees,
         deadline=newTicket.deadline,
     )
     return ticket

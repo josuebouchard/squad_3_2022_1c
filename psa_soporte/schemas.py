@@ -24,6 +24,7 @@ class TicketPost(BaseModel):
     description: str
     clientId: int
     tasks: List[int]
+    employees: List[int]
     priority: str  # PRIORIDAD_ALTA, PRIORIDAD_MEDIA, PRIORIDAD_BAJA
     severity: str  # S1, S2, S3, S4
     deadline: datetime

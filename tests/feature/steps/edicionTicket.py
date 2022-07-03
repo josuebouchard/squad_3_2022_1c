@@ -15,17 +15,23 @@ def step_impl(context):
     service = TicketService()
     ticketID = context.ticket.id
 
-    service.updateTicket(ticketID, {'title': model["titulo"], 'description': model["descripcion"], 'severity': model["severidad"],
-                         'priority': model["prioridad"], 'deadline': datetime.fromisoformat(model["fechaDeVencimiento"])})
+    service.updateTicket(
+        ticketID,
+        {
+            "title": model["titulo"],
+            "description": model["descripcion"],
+            "severity": model["severidad"],
+            "priority": model["prioridad"],
+            "deadline": datetime.fromisoformat(model["fechaDeVencimiento"]),
+        },
+    )
 
     ticket = service.getTicket(ticketID)
     assert ticket.title == model["titulo"]
     assert ticket.description == model["descripcion"]
     assert ticket.severity == model["severidad"]
     assert ticket.priority == model["prioridad"]
-    assert ticket.deadline == datetime.fromisoformat(
-        model["fechaDeVencimiento"]
-    )
+    assert ticket.deadline == datetime.fromisoformat(model["fechaDeVencimiento"])
 
 
 @given('"{nuevaFecha}" es anterior a la fecha actual')
@@ -38,7 +44,7 @@ def step_impl(context, nuevaFecha):
     service = TicketService()
     ticketID = context.ticket.id
     try:
-        service.updateTicket(ticketID, {'deadline': datetime.fromisoformat(nuevaFecha)})
+        service.updateTicket(ticketID, {"deadline": datetime.fromisoformat(nuevaFecha)})
     except Exception:
         context.error = True
 
@@ -108,6 +114,6 @@ def step_impl(context):
     ticketID = context.ticket.id
 
     try:
-        service.updateTicket(ticketID, {'title': None})
+        service.updateTicket(ticketID, {"title": None})
     except Exception:
         context.error = True
