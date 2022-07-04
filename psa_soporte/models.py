@@ -31,7 +31,7 @@ class Ticket(Base):
     priority = Column(String)
     severity = Column(String)
     state = Column(String, default="Abierto")
-    versionId = Column(Integer) # Foreign key to products api
+    versionId = Column(Integer)  # Foreign key to products api
     deadline = Column(DateTime)
     lastUpdateDate = Column(
         DateTime(timezone=False),
@@ -41,4 +41,4 @@ class Ticket(Base):
     creationDate = Column(DateTime(timezone=False), server_default=func.now())
 
     tasks = relationship("Task", lazy="joined")
-    employees = relationship("Employee")
+    employees = relationship("Employee", lazy="joined")

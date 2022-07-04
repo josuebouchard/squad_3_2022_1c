@@ -2,12 +2,15 @@ import json
 from typing import Optional
 import uvicorn
 from os import environ
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from psa_soporte.services import TicketService
 from psa_soporte.schemas import Ticket as SchemasTicket, TicketUpdate, TicketPost
-from psa_soporte.services.exceptions import BaseValidationException, EmployeeNotFoundException
+from psa_soporte.services.exceptions import (
+    BaseValidationException,
+    EmployeeNotFoundException,
+)
 from .database import engine
 from . import models
 
@@ -50,7 +53,17 @@ def list_products():
 @app.get("/tickets", tags=["tickets"])
 def list_tickets(versionId: Optional[int] = None):
     tickets = ticket_service.allTickets(versionId=versionId)
-    return tickets
+    out_tickets = [
+        SchemasTicket(
+            **{
+                **ticket.__dict__,
+                "tasks": [task.taskId for task in ticket.tasks],
+                "employees": [employee.employeeID for employee in ticket.employees],
+            }
+        )
+        for ticket in tickets
+    ]
+    return out_tickets
 
 
 @app.post("/tickets", tags=["tickets"])
@@ -69,12 +82,20 @@ def create_ticket(newTicket: TicketPost):
     return ticket
 
 
-@app.get("/tickets/{ticket_id}", response_model=SchemasTicket, tags=["tickets"])
+@app.get("/tickets/{ticket_id}", tags=["tickets"])
 def get_ticket(ticket_id: int):
     ticket = ticket_service.getTicket(ticket_id)
     if ticket == None:
         return JSONResponse(status_code=404)
-    return ticket
+
+    out_ticket = SchemasTicket(
+        **{
+            **ticket.__dict__,
+            "tasks": [task.taskId for task in ticket.tasks],
+            "employees": [employee.employeeID for employee in ticket.employees],
+        }
+    )
+    return out_ticket
 
 
 @app.put("/tickets/{ticket_id}", tags=["tickets"])
@@ -98,15 +119,35 @@ def list_employees(ticket_id: int):
     return employees
 
 
-@app.post("/tickets/{ticket_id}/employees/{employee_id}", tags=["employees"])
+@app.post("/tickets/{ticket_id}/employees", tags=["employees"])
 def add_employee(ticket_id: int, employee_id: int):
     ticket_service.addEmployee(employee_id, ticket_id)
     return JSONResponse(status_code=200)
 
 
-@app.delete("/tickets/{ticket_id}/employees/{employee_id}", tags=["employees"])
+@app.delete("/tickets/{ticket_id}/employees", tags=["employees"])
 def remove_employee(ticket_id: int, employee_id: int):
     ticket_service.removeEmployeeFromTicket(employee_id, ticket_id)
+    return JSONResponse(status_code=200)
+
+
+# Tasks
+
+
+@app.get("/tickets/{ticket_id}/tasks", tags=["tasks"])
+def list_tasks(ticket_id: int):
+    return ticket_service.getTasks(ticket_id)
+
+
+@app.post("/tickets/{ticket_id}/tasks", tags=["tasks"])
+def add_task(ticket_id: int, task_id: int):
+    print(f"Adding task {task_id}")
+    return ticket_service.addTask(task_id, ticket_id)
+
+
+@app.delete("/tickets/{ticket_id}/task", tags=["tasks"])
+def delete_task(ticket_id: int, task_id: int):
+    ticket_service.removeTask(task_id, ticket_id)
     return JSONResponse(status_code=200)
 
 

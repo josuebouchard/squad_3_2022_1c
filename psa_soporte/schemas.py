@@ -15,6 +15,8 @@ class Ticket(BaseModel):
     creationDate: datetime
     lastUpdateDate: datetime
     deadline: datetime
+    employees: list
+    tasks: list
 
     class Config:
         orm_mode = True

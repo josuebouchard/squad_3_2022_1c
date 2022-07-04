@@ -51,14 +51,15 @@ class TicketService:
                 deadline=deadline,
             )
 
+            for employeeID in employees:
+                ticket.employees.append(Employee(employeeID=employeeID))
+
             for taskID in tasks:
-                ticket.tasks.append(Task(taskId=taskID, ticketId=ticket.id))
+                ticket.tasks.append(Task(taskId=taskID))
 
             db.add(ticket)
             db.commit()
             db.refresh(ticket)
-
-            self.addEmployees(employees, ticket.id)
 
             return ticket
 
@@ -112,21 +113,32 @@ class TicketService:
 
     # Employee methods
 
-    def addEmployee(self, employeeID: int, ticketID: int):
-        return self.addEmployees([employeeID], ticketID)
-
     def _get_valid_employee_ids(self):
         employees = requests.get(url).json()
         ids = [int(employee["legajo"]) for employee in employees]
 
         return ids
 
-    def addEmployees(self, employeeIDs: list, ticketID: int):
+    def getAllEmployeesAssignedTo(self, ticketID: int):
+        ticket = self.getTicket(ticketID)
+        if ticket is None:
+            raise TicketNotFoundException(ticketID)
+
+        return ticket.employees
+
+    def addEmployee(self, employeeID: int, ticketID: int):
+        return self.addEmployees([employeeID], ticketID)
+
+    def addEmployees(self, employeeIDs: List[int], ticketID: int):
         # employeesIDs es una lista con los ids de los empleados
 
         db: Session
         with SessionLocal() as db:
-            ticket = db.query(Ticket).filter_by(id=ticketID).first()
+            ticket = self.getTicket(ticketID)
+            if ticket is None:
+                raise TicketNotFoundException(ticketID)
+
+            db.add(ticket)
 
             valid_ids = self._get_valid_employee_ids()
             for employeeID in employeeIDs:
@@ -136,33 +148,63 @@ class TicketService:
                 ticket.employees.append(Employee(employeeID=employeeID))
             db.commit()
 
-    def getAllEmployeesAssignedTo(self, ticketID: int):
-        db: Session
-        with SessionLocal() as db:
-            ids = []
-
-            for employee in db.query(Employee).filter_by(ticketID=ticketID).all():
-                ids.append(int(employee.employeeID))
-
-            return ids
-
     def removeEmployeeFromTicket(self, employeeID: int, ticketID: int):
         db: Session
         with SessionLocal() as db:
-            exists = (
+            affected_rows = (
                 db.query(Employee)
-                .filter_by(ticketID=ticketID, employeeID=employeeID)
-                .first()
-                is not None
+                .filter_by(
+                    employeeID=employeeID,
+                    ticketID=ticketID,
+                )
+                .delete()
             )
-            if not exists:
-                raise EmployeeNotFoundException(employeeID)
-
-            db.query(Employee).filter_by(
-                employeeID=employeeID, ticketID=ticketID
-            ).delete()
-
             db.commit()
+
+        if affected_rows <= 0:
+            raise EmployeeNotFoundException(employeeID)
+
+    # tasks
+
+    def getTasks(self, ticketID: int):
+        ticket = self.getTicket(ticketID)
+        if ticket is None:
+            raise TicketNotFoundException(ticketID)
+
+        return ticket.tasks
+
+    def addTask(self, taskID: int, ticketID: int):
+        return self.addTasks([taskID], ticketID)
+
+    def addTasks(self, taskIDs: List[int], ticketID: int):
+        db: Session
+        with SessionLocal() as db:
+            ticket = self.getTicket(ticketID)
+            if ticket is None:
+                raise TicketNotFoundException(ticketID)
+
+            db.add(ticket)
+
+            for taskId in taskIDs:
+                # TODO: add validation
+                ticket.tasks.append(Task(taskId=taskId))
+            db.commit()
+
+    def removeTask(self, taskID: int, ticketID: int):
+        db: Session
+        with SessionLocal() as db:
+            affected_rows = (
+                db.query(Task)
+                .filter_by(
+                    taskId=taskID,
+                    ticketId=ticketID,
+                )
+                .delete()
+            )
+            db.commit()
+
+        if affected_rows <= 0:
+            raise TaskNotFoundException(ticketID, taskID)
 
     # Validations
 
