@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 from psa_soporte.database import SessionLocal, Session
 from psa_soporte.models import *
@@ -217,7 +217,7 @@ class TicketService:
         deadline: DateTime,
         creationDate: DateTime = datetime.now(),
     ) -> None:
-        if deadline < creationDate:
+        if deadline.replace(tzinfo=timezone.UTC) < creationDate.replace(tzinfo=timezone.UTC):
             raise DeadlineBeforeCreationDateException()
 
     def _assert_employees_are_valid(self, employees):
