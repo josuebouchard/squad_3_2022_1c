@@ -8,6 +8,7 @@ class Ticket(BaseModel):
     title: str
     description: str
     clientId: int
+    versionId: int
     priority: str  # PRIORIDAD_ALTA, PRIORIDAD_MEDIA, PRIORIDAD_BAJA
     severity: str  # S1, S2, S3, S4
     state: str  # ABIERTO, CERRADO, EN_PROGRESO
@@ -23,6 +24,7 @@ class TicketPost(BaseModel):
     title: str
     description: str
     clientId: int
+    versionId: int
     tasks: List[int]
     employees: List[int]
     priority: str  # PRIORIDAD_ALTA, PRIORIDAD_MEDIA, PRIORIDAD_BAJA

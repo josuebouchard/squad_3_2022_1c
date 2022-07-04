@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import List, Optional
 from psa_soporte.database import SessionLocal, Session
 from psa_soporte.models import *
@@ -16,20 +16,28 @@ class TicketService:
         title: str,
         description: str,
         clientId: int,
+        versionId: int,
         tasks: List[int],
         priority,
         severity,
-        version,
         employees: list,
         deadline: DateTime,
     ):
         self._assert_fields_are_not_null(
-            [title, description, clientId, priority,
-                severity, version, employees, deadline]
+            [
+                title,
+                description,
+                clientId,
+                versionId,
+                priority,
+                severity,
+                employees,
+                deadline,
+            ]
         )
         self._assert_deadline_is_valid(deadline)
         self._assert_employees_are_valid(employees)
-        self._assert_tasks_are_valid(tasks)
+        # self._assert_tasks_are_valid(tasks)
 
         db: Session
         with SessionLocal() as db:
@@ -37,9 +45,9 @@ class TicketService:
                 title=title,
                 description=description,
                 clientId=clientId,
+                versionId=versionId,
                 priority=priority,
                 severity=severity,
-                version=version,
                 deadline=deadline,
             )
 
@@ -54,20 +62,19 @@ class TicketService:
 
             return ticket
 
-    def getTicket(self, ticketID: int) -> Optional[Ticket]:
+    def getTicket(self, ticketID: int = None) -> Optional[Ticket]:
         db: Session
         with SessionLocal() as db:
             ticket = db.query(Ticket).filter_by(id=ticketID).first()
-
-            # TODO: no devolver clientId sino devolver data del cliente
-
             return ticket
 
-    def allTickets(self) -> List[Ticket]:
+    def allTickets(self, versionId: Optional[int]) -> List[Ticket]:
         db: Session
         with SessionLocal() as db:
-            tickets = db.query(Ticket).all()
-            return tickets
+            query = db.query(Ticket)
+            if versionId is not None:
+                query = query.filter_by(versionId=versionId)
+            return query.all()
 
     def updateTicket(self, id: int, fields: dict):
         """Example: `service.updateTicket(21, {'title': 'nuevo titulo'})`"""
@@ -152,7 +159,8 @@ class TicketService:
                 raise EmployeeNotFoundException(employeeID)
 
             db.query(Employee).filter_by(
-                employeeID=employeeID, ticketID=ticketID).delete()
+                employeeID=employeeID, ticketID=ticketID
+            ).delete()
 
             db.commit()
 
@@ -171,9 +179,9 @@ class TicketService:
             raise DeadlineBeforeCreationDateException()
 
     def _assert_employees_are_valid(self, employees):
-        if len(employees) == 0:
+        if len(employees) <= 0:
             raise MustAsignAtLeastOneEmployeeException()
 
     def _assert_tasks_are_valid(self, tasks):
-        if len(tasks) == 0:
+        if len(tasks) <= 0:
             raise MustAsignAtLeastOneTaskException()

@@ -1,9 +1,10 @@
 import json
+from typing import Optional
 import uvicorn
 from os import environ
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
-from psa_soporte.services import TicketService, InvalidEmployee
+from psa_soporte.services import TicketService
 from psa_soporte.schemas import Ticket as SchemasTicket, TicketUpdate, TicketPost
 from .database import engine
 from . import models
@@ -45,8 +46,8 @@ def list_products():
 
 
 @app.get("/tickets", tags=["tickets"])
-def list_tickets():
-    tickets = ticket_service.allTickets()
+def list_tickets(versionId: Optional[int] = None):
+    tickets = ticket_service.allTickets(versionId=versionId)
     return tickets
 
 
@@ -56,6 +57,7 @@ def create_ticket(newTicket: TicketPost):
         title=newTicket.title,
         description=newTicket.description,
         clientId=newTicket.clientId,
+        versionId=newTicket.versionId,
         tasks=newTicket.tasks,
         priority=newTicket.priority,
         severity=newTicket.severity,
@@ -96,11 +98,7 @@ def list_employees(ticket_id: int):
 
 @app.post("/tickets/{ticket_id}/employees/{employee_id}", tags=["employees"])
 def add_employee(ticket_id: int, employee_id: int):
-    try:
-        ticket_service.addEmployee(employee_id, ticket_id)
-    except InvalidEmployee as exception:
-        return Response(content=str(exception), status_code=406)
-
+    ticket_service.addEmployee(employee_id, ticket_id)
     return Response(status_code=200)
 
 

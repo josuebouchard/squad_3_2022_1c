@@ -31,7 +31,7 @@ class Ticket(Base):
     priority = Column(String)
     severity = Column(String)
     state = Column(String, default="Abierto")
-    version = Column(String)
+    versionId = Column(Integer) # Foreign key to products api
     deadline = Column(DateTime)
     lastUpdateDate = Column(
         DateTime(timezone=False),
