@@ -145,7 +145,7 @@ def add_task(ticket_id: int, task_id: int):
     return ticket_service.addTask(task_id, ticket_id)
 
 
-@app.delete("/tickets/{ticket_id}/task", tags=["tasks"])
+@app.delete("/tickets/{ticket_id}/tasks", tags=["tasks"])
 def delete_task(ticket_id: int, task_id: int):
     ticket_service.removeTask(task_id, ticket_id)
     return Response(status_code=200)
