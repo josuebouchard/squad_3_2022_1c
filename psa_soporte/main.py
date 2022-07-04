@@ -3,6 +3,7 @@ from typing import Optional
 import uvicorn
 from os import environ
 from fastapi import FastAPI, Request, Response
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from psa_soporte.services import TicketService
 from psa_soporte.schemas import Ticket as SchemasTicket, TicketUpdate, TicketPost
@@ -155,9 +156,9 @@ def delete_task(ticket_id: int, task_id: int):
 
 @app.exception_handler(BaseValidationException)
 def validation_error_handler(req: Request, exc: BaseValidationException):
-    return Response(
+    return JSONResponse(
         status_code=400,
-        content=json.dumps({"message": str(exc)}),
+        content={"message": str(exc)},
     )
 
 
