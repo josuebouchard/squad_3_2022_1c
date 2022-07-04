@@ -157,7 +157,7 @@ def delete_task(ticket_id: int, task_id: int):
 def validation_error_handler(req: Request, exc: BaseValidationException):
     return Response(
         status_code=400,
-        content={"message": str(exc)},
+        content=json.dumps({"message": str(exc)}),
     )
 
 
