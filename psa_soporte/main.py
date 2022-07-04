@@ -2,10 +2,12 @@ import json
 from typing import Optional
 import uvicorn
 from os import environ
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from psa_soporte.services import TicketService
 from psa_soporte.schemas import Ticket as SchemasTicket, TicketUpdate, TicketPost
+from psa_soporte.services.exceptions import BaseValidationException, EmployeeNotFoundException
 from .database import engine
 from . import models
 
@@ -71,7 +73,7 @@ def create_ticket(newTicket: TicketPost):
 def get_ticket(ticket_id: int):
     ticket = ticket_service.getTicket(ticket_id)
     if ticket == None:
-        return Response(status_code=404)
+        return JSONResponse(status_code=404)
     return ticket
 
 
@@ -84,7 +86,7 @@ def update_ticket(ticket_id: int, updated_ticket: TicketUpdate):
 @app.delete("/tickets/{ticket_id}", tags=["tickets"])
 def delete_ticket(ticket_id: int):
     ticket_service.deleteTicket(ticket_id)
-    return Response(status_code=200)
+    return JSONResponse(status_code=200)
 
 
 # Employees
@@ -99,13 +101,24 @@ def list_employees(ticket_id: int):
 @app.post("/tickets/{ticket_id}/employees/{employee_id}", tags=["employees"])
 def add_employee(ticket_id: int, employee_id: int):
     ticket_service.addEmployee(employee_id, ticket_id)
-    return Response(status_code=200)
+    return JSONResponse(status_code=200)
 
 
 @app.delete("/tickets/{ticket_id}/employees/{employee_id}", tags=["employees"])
 def remove_employee(ticket_id: int, employee_id: int):
     ticket_service.removeEmployeeFromTicket(employee_id, ticket_id)
-    return Response(status_code=200)
+    return JSONResponse(status_code=200)
+
+
+# Error handler
+
+
+@app.exception_handler(BaseValidationException)
+def validation_error_handler(req: Request, exc: BaseValidationException):
+    return JSONResponse(
+        status_code=400,
+        content={"message": str(exc)},
+    )
 
 
 if __name__ == "__main__":
