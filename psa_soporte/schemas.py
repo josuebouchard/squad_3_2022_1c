@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 
 class Ticket(BaseModel):
@@ -45,6 +45,8 @@ class TicketUpdate(BaseModel):
     severity: str  # S1, S2, S3, S4
     state: str  # ABIERTO, CERRADO, EN_PROGRESO
     deadline: datetime
+    tasks: Optional[List[int]]
+    employees: Optional[List[int]]
 
     class Config:
         orm_mode = True

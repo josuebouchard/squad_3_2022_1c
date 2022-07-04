@@ -7,9 +7,9 @@ from .database import Base
 class Task(Base):
     __tablename__ = "tasks"
 
-    id = Column(Integer, primary_key=True)
-    taskId = Column(Integer)  # Remote foreign key to proyect system
-    ticketId = Column(ForeignKey("tickets.id"))
+    # id = Column(Integer, primary_key=True)
+    taskId = Column(Integer, primary_key=True)  # Remote foreign key to proyect system
+    ticketId = Column(ForeignKey("tickets.id"), primary_key=True)
 
 
 class Employee(Base):

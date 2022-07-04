@@ -92,12 +92,43 @@ class TicketService:
         # if "tasks" in fields:
         #     self._assert_tasks_are_valid(fields["tasks"])
 
+        tasksDesired = fields.pop("tasks", [])
+        employeesDesired = fields.pop("employees", [])
+
         db: Session
         with SessionLocal() as db:
-            db.execute(select())
             db.query(Ticket).filter(Ticket.id == id).update(
                 fields, synchronize_session="evaluate"
             )
+            db.commit()
+
+            # Manage tasks
+            db.query(Task).filter(
+                Task.ticketId == id,
+                Task.taskId.not_in(tasksDesired),
+            ).delete(synchronize_session="fetch")
+            for task in tasksDesired:
+                if not db.query(Task).filter_by(ticketId=id, taskId=task).first():
+                    db.add(Task(ticketId=id, taskId=task))
+
+            db.commit()
+
+            # Manage employees
+            db.query(Employee).filter(
+                Employee.ticketID == id,
+                Employee.employeeID.not_in(employeesDesired),
+            ).delete(synchronize_session="fetch")
+            for employee in employeesDesired:
+                if not (
+                    db.query(Employee)
+                    .filter(
+                        Employee.ticketID == id,
+                        Employee.employeeID == employee,
+                    )
+                    .first()
+                ):
+                    db.add(Task(ticketId=id, taskId=task))
+
             db.commit()
 
     def deleteTicket(self, id: int) -> bool:
@@ -217,7 +248,9 @@ class TicketService:
         deadline: DateTime,
         creationDate: DateTime = datetime.now(),
     ) -> None:
-        if deadline.replace(tzinfo=timezone.utc) < creationDate.replace(tzinfo=timezone.utc):
+        if deadline.replace(tzinfo=timezone.utc) < creationDate.replace(
+            tzinfo=timezone.utc
+        ):
             raise DeadlineBeforeCreationDateException()
 
     def _assert_employees_are_valid(self, employees):
