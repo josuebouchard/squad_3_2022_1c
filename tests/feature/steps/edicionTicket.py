@@ -21,7 +21,7 @@ def step_impl(context):
             "title": model["titulo"],
             "description": model["descripcion"],
             "severity": model["severidad"],
-            "version": model['version'],
+            "versionId": model['version'],
             "priority": model["prioridad"],
             "deadline": datetime.fromisoformat(model["fechaDeVencimiento"]),
         },
@@ -31,7 +31,9 @@ def step_impl(context):
     assert ticket.title == model["titulo"]
     assert ticket.description == model["descripcion"]
     assert ticket.severity == model["severidad"]
-    assert ticket.version == model["version"]
+    print(ticket.versionId)
+    print(model['version'])
+    assert int(ticket.versionId) == int(model["version"])
     assert ticket.priority == model["prioridad"]
     assert ticket.deadline == datetime.fromisoformat(model["fechaDeVencimiento"])
 
@@ -77,7 +79,10 @@ def step_impl(context):
 def step_impl(context, empleadoId):
     service = TicketService()
     ticketID = context.ticket.id
-    assert int(empleadoId) in service.getAllEmployeesAssignedTo(ticketID)
+    ids = []
+    for employee in service.getAllEmployeesAssignedTo(ticketID):
+        ids.append(employee.employeeID)
+    assert int(empleadoId) in ids
 
 
 @given('empleado de id "{empleadoId}" está asignado a ese ticket')
@@ -88,7 +93,10 @@ def step_impl(context, empleadoId):
         service.addEmployee(empleadoId, ticketID)
     except Exception:
         context.error = True
-    assert int(empleadoId) in service.getAllEmployeesAssignedTo(ticketID)
+    ids = []
+    for employee in service.getAllEmployeesAssignedTo(ticketID):
+        ids.append(employee.employeeID)
+    assert int(empleadoId) in ids
 
 
 @when(
@@ -106,7 +114,10 @@ def step_impl(context, empleadoId):
     service = TicketService()
     ticketID = context.ticket.id
 
-    assert int(empleadoId) not in service.getAllEmployeesAssignedTo(ticketID)
+    ids = []
+    for employee in service.getAllEmployeesAssignedTo(ticketID):
+        ids.append(employee.employeeID)
+    assert int(empleadoId) not in ids
 
 
 @when("edito el ticket y agrego un atributo nulo")

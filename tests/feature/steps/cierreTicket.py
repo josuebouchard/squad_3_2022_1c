@@ -11,7 +11,7 @@ atributos = {
     "tareas": [1],
     "prioridad": "Alta",
     "severidad": "s1",
-    "version": "Version 1.0",
+    "version": 1,
     "empleados": [1],
     "producto": "Aplicación de Pagos",
     "responsables": "Juan Perez",
@@ -30,12 +30,11 @@ def step_impl(context):
             tasks=atributos["tareas"],
             priority=atributos["prioridad"],
             severity=atributos["severidad"],
-            version=atributos["version"],
+            versionId=atributos["version"],
             employees=atributos["empleados"],
             deadline=datetime.fromisoformat(atributos["fechaDeVencimiento"]),
         )
     except Exception as error:
-        print(error)
         context.error = error
 
 

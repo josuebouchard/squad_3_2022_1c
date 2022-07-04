@@ -10,7 +10,7 @@ Feature: Edición de los tickets para actualizar la información de los mismos.
         | descripcion   	| Desaparecieron entidades de mi inventario   |
         | prioridad     	| Alta 		  							      |
         | severidad 		| s3 		  							      |
-        | version           | Version 3.0                                 |
+        | version           | 3                                           |
         | producto 			| Sistema de inventarios versión 1.1.3	      |
         | responsables 		| 1,2                						  |
         | fechaDeVencimiento| 2023-07-07 								  |
@@ -39,7 +39,7 @@ Feature: Edición de los tickets para actualizar la información de los mismos.
     Scenario: Editar un ticket con responsable asignado que no se encuentra en el sistema
         Given Soy empleado de mesa de ayuda
         And hay un ticket
-        When edito el ticket y agrego como responsable asignado a empleado de id "1"
+        When edito el ticket y agrego como responsable asignado a empleado de id "10000"
         And ese empleado no se encuentra en el sistema
         Then Se emite un error
 

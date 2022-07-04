@@ -51,15 +51,14 @@ class TicketService:
                 deadline=deadline,
             )
 
-            for employeeID in employees:
-                ticket.employees.append(Employee(employeeID=employeeID))
-
             for taskID in tasks:
                 ticket.tasks.append(Task(taskId=taskID))
 
             db.add(ticket)
             db.commit()
             db.refresh(ticket)
+
+            self.addEmployees(employees, ticket.id)
 
             return ticket
 
@@ -119,6 +118,8 @@ class TicketService:
                 Employee.employeeID.not_in(employeesDesired),
             ).delete(synchronize_session="fetch")
             for employee in employeesDesired:
+                if not db.query(Employee).filter_by(employeeID=employee).first():
+                    raise EmployeeNotFoundException(employee)
                 if not (
                     db.query(Employee)
                     .filter(
@@ -127,7 +128,7 @@ class TicketService:
                     )
                     .first()
                 ):
-                    db.add(Task(ticketId=id, taskId=task))
+                    db.add(Employee(ticketID=id, employeeID=employee))
 
             db.commit()
 

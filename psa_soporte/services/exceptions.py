@@ -50,3 +50,10 @@ class TaskNotFoundException(BaseValidationException):
         self.ticket_id = ticket_id
         self.msg = f"Task with id {task_id} was not assigned to ticket {ticket_id}"
         super().__init__(self.msg)
+
+
+class EmployeeAlreadyAssignedException(Exception):
+    def __init__(self, employee_id: int) -> None:
+        self.employee_id = employee_id
+        self.msg = f"Employee with id {employee_id} is already assigned to this ticket"
+        super().__init__(self.msg)

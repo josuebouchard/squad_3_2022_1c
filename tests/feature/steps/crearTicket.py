@@ -27,7 +27,7 @@ def step_impl(context):
             tasks=model["tareas"],
             priority=model["prioridad"],
             severity=model["severidad"],
-            version=model['version'],
+            versionId=model['version'],
             employees=model["responsables"].split(","),
             deadline=datetime.fromisoformat(model["fechaDeVencimiento"]),
         )
@@ -48,7 +48,7 @@ def step_impl(context, unaFechaDeVencimiento):
             tasks=[1],
             priority="Alta",
             severity="s1",
-            version="Version 1.0",
+            versionId=1,
             employees=[1],
             deadline=datetime.fromisoformat(unaFechaDeVencimiento),
             creationDate=datetime.fromisoformat(context.fechaActual),
@@ -68,7 +68,7 @@ def step_impl(context, id):
             tasks=[1],
             priority="Alta",
             severity="s1",
-            version="Version 1.0",
+            versionId=1,
             employees=[id],
             deadline=datetime.fromisoformat("2023-01-01"),
         )
@@ -92,7 +92,7 @@ def step_impl(context):
             tasks=[1],
             priority="Alta",
             severity="s1",
-            version="Version 1.0",
+            versionId=1,
             employees=[1],
             deadline=datetime.fromisoformat("2023-01-01"),
         )
@@ -102,13 +102,11 @@ def step_impl(context):
 
 @then("El ticket se crea correctamente")
 def step_impl(context):
-    print(f"\n\n\n\n{context.error}")
     assert context.error == None
 
 
 @then("Se emite un error")
 def step_impl(context):
-    print(context.error)
     assert context.error != None
 
 
