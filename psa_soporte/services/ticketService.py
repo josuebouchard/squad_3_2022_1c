@@ -161,8 +161,8 @@ class TicketService:
             )
             db.commit()
 
-        if affected_rows <= 0:
-            raise EmployeeNotFoundException(employeeID)
+        # if affected_rows <= 0:
+        #     raise EmployeeNotFoundException(employeeID)
 
     # tasks
 
@@ -203,8 +203,8 @@ class TicketService:
             )
             db.commit()
 
-        if affected_rows <= 0:
-            raise TaskNotFoundException(ticketID, taskID)
+        # if affected_rows <= 0:
+        #     raise TaskNotFoundException(ticketID, taskID)
 
     # Validations
 
