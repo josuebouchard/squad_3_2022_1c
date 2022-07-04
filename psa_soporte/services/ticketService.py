@@ -88,8 +88,8 @@ class TicketService:
         if "employees" in fields:
             self._assert_employees_are_valid(fields["employees"])
 
-        if "tasks" in fields:
-            self._assert_tasks_are_valid(fields["tasks"])
+        # if "tasks" in fields:
+        #     self._assert_tasks_are_valid(fields["tasks"])
 
         db: Session
         with SessionLocal() as db:
