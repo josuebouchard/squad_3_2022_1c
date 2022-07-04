@@ -2,8 +2,7 @@ import json
 from typing import Optional
 import uvicorn
 from os import environ
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from psa_soporte.services import TicketService
 from psa_soporte.schemas import Ticket as SchemasTicket, TicketUpdate, TicketPost
@@ -86,7 +85,7 @@ def create_ticket(newTicket: TicketPost):
 def get_ticket(ticket_id: int):
     ticket = ticket_service.getTicket(ticket_id)
     if ticket == None:
-        return JSONResponse(status_code=404)
+        return Response(status_code=404)
 
     out_ticket = SchemasTicket(
         **{
@@ -107,7 +106,7 @@ def update_ticket(ticket_id: int, updated_ticket: TicketUpdate):
 @app.delete("/tickets/{ticket_id}", tags=["tickets"])
 def delete_ticket(ticket_id: int):
     ticket_service.deleteTicket(ticket_id)
-    return JSONResponse(status_code=200)
+    return Response(status_code=200)
 
 
 # Employees
@@ -122,13 +121,13 @@ def list_employees(ticket_id: int):
 @app.post("/tickets/{ticket_id}/employees", tags=["employees"])
 def add_employee(ticket_id: int, employee_id: int):
     ticket_service.addEmployee(employee_id, ticket_id)
-    return JSONResponse(status_code=200)
+    return Response(status_code=200)
 
 
 @app.delete("/tickets/{ticket_id}/employees", tags=["employees"])
 def remove_employee(ticket_id: int, employee_id: int):
     ticket_service.removeEmployeeFromTicket(employee_id, ticket_id)
-    return JSONResponse(status_code=200)
+    return Response(status_code=200)
 
 
 # Tasks
@@ -148,7 +147,7 @@ def add_task(ticket_id: int, task_id: int):
 @app.delete("/tickets/{ticket_id}/task", tags=["tasks"])
 def delete_task(ticket_id: int, task_id: int):
     ticket_service.removeTask(task_id, ticket_id)
-    return JSONResponse(status_code=200)
+    return Response(status_code=200)
 
 
 # Error handler
@@ -156,7 +155,7 @@ def delete_task(ticket_id: int, task_id: int):
 
 @app.exception_handler(BaseValidationException)
 def validation_error_handler(req: Request, exc: BaseValidationException):
-    return JSONResponse(
+    return Response(
         status_code=400,
         content={"message": str(exc)},
     )
