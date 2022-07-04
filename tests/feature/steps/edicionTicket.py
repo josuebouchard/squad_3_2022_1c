@@ -112,9 +112,9 @@ def step_impl(context, empleadoId):
 @when("edito el ticket y agrego un atributo nulo")
 def step_impl(context):
     service = TicketService()
-    ticketID = context.ticket.id
+    ticketID = 1
 
     try:
         service.updateTicket(ticketID, {"title": None})
-    except Exception:
+    except:
         context.error = True

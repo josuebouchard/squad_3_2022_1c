@@ -39,7 +39,7 @@ Feature: Edición de los tickets para actualizar la información de los mismos.
     Scenario: Editar un ticket con responsable asignado que no se encuentra en el sistema
         Given Soy empleado de mesa de ayuda
         And hay un ticket
-        When edito el ticket y agrego como responsable asignado a empleado de id "5"
+        When edito el ticket y agrego como responsable asignado a empleado de id "1"
         And ese empleado no se encuentra en el sistema
         Then Se emite un error
 
