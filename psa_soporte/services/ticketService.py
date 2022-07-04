@@ -217,7 +217,7 @@ class TicketService:
         deadline: DateTime,
         creationDate: DateTime = datetime.now(),
     ) -> None:
-        if deadline.replace(tzinfo=timezone.UTC) < creationDate.replace(tzinfo=timezone.UTC):
+        if deadline.replace(tzinfo=timezone.utc) < creationDate.replace(tzinfo=timezone.utc):
             raise DeadlineBeforeCreationDateException()
 
     def _assert_employees_are_valid(self, employees):
