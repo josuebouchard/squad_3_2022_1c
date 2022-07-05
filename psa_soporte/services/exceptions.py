@@ -57,3 +57,9 @@ class EmployeeAlreadyAssignedException(Exception):
         self.employee_id = employee_id
         self.msg = f"Employee with id {employee_id} is already assigned to this ticket"
         super().__init__(self.msg)
+
+
+class MustRemainAtLeastOneEmployeeAssignedToTheTicketException(Exception):
+    def __init__(self) -> None:
+        self.msg = "Ticket must remain at least one employee assigned"
+        super().__init__(self.msg)

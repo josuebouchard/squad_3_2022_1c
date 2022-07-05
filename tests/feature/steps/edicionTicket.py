@@ -82,10 +82,13 @@ def step_impl(context, empleadoId):
     ids = []
     for employee in service.getAllEmployeesAssignedTo(ticketID):
         ids.append(employee.employeeID)
+    print("Hola")
+    print(ids)
+    print(empleadoId)
     assert int(empleadoId) in ids
 
 
-@given('empleado de id "{empleadoId}" está asignado a ese ticket')
+@given('empleado de id "{empleadoId}" ahora está asignado a ese ticket')
 def step_impl(context, empleadoId):
     service = TicketService()
     ticketID = context.ticket.id
@@ -99,6 +102,11 @@ def step_impl(context, empleadoId):
     assert int(empleadoId) in ids
 
 
+@given('empleado de id "{empleadoId}" está asignado a ese ticket')
+def step_impl(context, empleadoId):
+    pass
+
+
 @when(
     'edito el ticket y remuevo como responsable asignado a empleado de id "{empleadoId}"'
 )
@@ -106,7 +114,10 @@ def step_impl(context, empleadoId):
     service = TicketService()
     ticketID = context.ticket.id
 
-    service.removeEmployeeFromTicket(empleadoId, ticketID)
+    try:
+        service.removeEmployeeFromTicket(empleadoId, ticketID)
+    except Exception:
+        context.error = True
 
 
 @then('empleado de id "{empleadoId}" ahora ya no está asignado a ese ticket.')
@@ -117,6 +128,9 @@ def step_impl(context, empleadoId):
     ids = []
     for employee in service.getAllEmployeesAssignedTo(ticketID):
         ids.append(employee.employeeID)
+    print("Hola")
+    print(ids)
+    print(empleadoId)
     assert int(empleadoId) not in ids
 
 

@@ -181,17 +181,30 @@ class TicketService:
             db.commit()
 
     def removeEmployeeFromTicket(self, employeeID: int, ticketID: int):
-        db: Session
-        with SessionLocal() as db:
-            affected_rows = (
-                db.query(Employee)
-                .filter_by(
-                    employeeID=employeeID,
-                    ticketID=ticketID,
+            db: Session
+            with SessionLocal() as db:
+                
+                valid_ids = self._get_valid_employee_ids()
+                if int(employeeID) not in valid_ids:
+                    raise EmployeeNotFoundException(employeeID)
+                
+                ticket = self.getTicket(ticketID)
+                if ticket is None:
+                    raise TicketNotFoundException(ticketID)
+
+                self._assert_employees_are_more_than_one(ticket.employees)
+
+                affected_rows = (
+                    db.query(Employee)
+                    .filter_by(
+                        employeeID=employeeID,
+                        ticketID=ticketID,
+                    )
+                    .delete()
                 )
-                .delete()
-            )
-            db.commit()
+
+
+                db.commit()
 
         # if affected_rows <= 0:
         #     raise EmployeeNotFoundException(employeeID)
@@ -261,3 +274,7 @@ class TicketService:
     def _assert_tasks_are_valid(self, tasks):
         if len(tasks) <= 0:
             raise MustAsignAtLeastOneTaskException()
+
+    def _assert_employees_are_more_than_one(self, employees):
+        if len(employees) <= 1:
+            raise MustRemainAtLeastOneEmployeeAssignedToTheTicketException()
