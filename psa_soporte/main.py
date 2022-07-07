@@ -2,6 +2,7 @@ import json
 from typing import Optional
 import uvicorn
 from os import environ
+import requests
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -36,6 +37,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Clientes
+@app.get("/clients", tags=["clients"])
+def list_clients():
+    return requests.get(
+        "https://anypoint.mulesoft.com/mocking/api/v1/sources/exchange/assets/754f50e8-20d8-4223-bbdc-56d50131d0ae/clientes-psa/1.0.0/m/api/clientes"
+    ).json()
 
 
 # Productos
