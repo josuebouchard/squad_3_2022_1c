@@ -45,6 +45,15 @@ def list_clients():
         "https://anypoint.mulesoft.com/mocking/api/v1/sources/exchange/assets/754f50e8-20d8-4223-bbdc-56d50131d0ae/clientes-psa/1.0.0/m/api/clientes"
     ).json()
 
+@app.get("/clients/{client_id}", tags=["clients"])
+def get_client(client_id: int):
+    clients = requests.get(
+        "https://anypoint.mulesoft.com/mocking/api/v1/sources/exchange/assets/754f50e8-20d8-4223-bbdc-56d50131d0ae/clientes-psa/1.0.0/m/api/clientes"
+    ).json()
+    for client in clients:
+        if client["id"] == client_id:
+            return client
+    return Response(content="client not found", status_code=404)
 
 # Productos
 @app.get("/products", tags=["products"])
